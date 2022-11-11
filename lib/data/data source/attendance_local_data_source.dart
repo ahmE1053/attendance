@@ -1,8 +1,10 @@
-import 'package:attendance/core/utilities/dependency_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../core/utilities/dependency_injection.dart';
 
 abstract class BaseLocalDataSource {
   Future<void> changeThemeMode(bool darkMode);
+
   Future<void> checkForFirstTime();
 }
 

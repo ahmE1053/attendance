@@ -1,7 +1,8 @@
-import 'package:attendance/core/providers/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/providers/app_provider.dart';
 
 class AllowedDelayWidget extends StatefulWidget {
   const AllowedDelayWidget({Key? key, required this.mq}) : super(key: key);

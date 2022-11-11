@@ -1,4 +1,3 @@
-import 'package:attendance/presentation/screens/qr_code_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +8,7 @@ import '../../domain/entities/employee.dart';
 import '../../other/minutes_text_adjuster.dart';
 import '../widgets/employee_details_screen/employee_details_report.dart';
 import 'edit_employee_details_screen.dart';
+import 'qr_code_screen.dart';
 
 class EmployeeInfoScreen extends StatelessWidget {
   static const id = 'EmployeeInfoScreen';

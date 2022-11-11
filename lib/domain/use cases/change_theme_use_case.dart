@@ -1,5 +1,5 @@
-import 'package:attendance/core/utilities/dependency_injection.dart';
-import 'package:attendance/domain/repository/base_attendance_repository.dart';
+import '../../core/utilities/dependency_injection.dart';
+import '../repository/base_attendance_repository.dart';
 
 class ChangeThemeModeUseCase {
   final BaseAttendanceRepository baseAttendanceRepository =

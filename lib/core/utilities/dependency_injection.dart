@@ -1,4 +1,3 @@
-import 'package:attendance/domain/use%20cases/remove_employee_absence_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +11,7 @@ import '../../domain/use cases/check_theme_first_time_use_case.dart';
 import '../../domain/use cases/edit_employee_details_use_case.dart';
 import '../../domain/use cases/get_employees_data_use_case.dart';
 import '../../domain/use cases/get_qr_code_in_pdf_cloud_use_case.dart';
+import '../../domain/use cases/remove_employee_absence_use_case.dart';
 
 final getIt = GetIt.instance;
 
