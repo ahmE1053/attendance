@@ -21,12 +21,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.instance.getToken().then((value) {
-    FirebaseFirestore.instance
-        .collection('fcmTokens')
-        .doc(value)
-        .set({'token': value});
-  });
+  FirebaseMessaging.instance.getToken().then(
+    (value) {
+      FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(value)
+          .set({'token': value});
+    },
+  );
   await FlutterDownloader.initialize(
       debug: true,
       // optional: set to false to disable printing logs to console (default: true)
@@ -54,8 +56,6 @@ class ProviderLayer extends StatelessWidget {
   }
 }
 
-//TODO handle upload file to storage logic
-//TODO add outside working hours when adding a new employee
 //TODO if absence days are more than 1 give the option to remove 1 or how many days
 
 class MyApp extends StatelessWidget {
