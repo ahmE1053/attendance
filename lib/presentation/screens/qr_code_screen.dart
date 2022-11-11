@@ -3,8 +3,6 @@ import 'package:attendance/domain/use%20cases/get_qr_code_in_pdf_cloud_use_case.
 import 'package:barcode_widget/barcode_widget.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -98,7 +96,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
               ),
               RoundedLoadingButton(
                 onPressed: () async {
-                  final navigator = Navigator.of(context);
                   isThePdfSaved = true;
                   _buttonController.start();
                   final scaffold = ScaffoldMessenger.of(context);
@@ -107,28 +104,26 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       .get<GetQrCodeInPdfUseCaseCloud>()
                       .getQrCodeInPdfUseCaseCloud(widget.id, widget.name, mq);
                   final url = Uri.parse('https://www.google.com');
-                  FlutterDownloader.enqueue(
-                      url: downloadUrl!, savedDir: savedDir);
-                  // if (!await launchUrl(
-                  //   url,
-                  //   mode: LaunchMode.inAppWebView,
-                  // )) {
-                  //   scaffold.showSnackBar(
-                  //     SnackBar(
-                  //       content: const Text(
-                  //         'حدث خطأ، برجاء إعادة المحاولة',
-                  //       ),
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(20),
-                  //       ),
-                  //       behavior: SnackBarBehavior.floating,
-                  //     ),
-                  //   );
-                  //   _buttonController.error();
-                  //   Future.delayed(const Duration(milliseconds: 700))
-                  //       .then((value) => _buttonController.reset());
-                  //   return;
-                  // }
+                  if (!await launchUrl(
+                    url,
+                    mode: LaunchMode.inAppWebView,
+                  )) {
+                    scaffold.showSnackBar(
+                      SnackBar(
+                        content: const Text(
+                          'حدث خطأ، برجاء إعادة المحاولة',
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                    _buttonController.error();
+                    Future.delayed(const Duration(milliseconds: 700))
+                        .then((value) => _buttonController.reset());
+                    return;
+                  }
 
                   scaffold.showSnackBar(
                     SnackBar(
