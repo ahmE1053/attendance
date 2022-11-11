@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1064964084279",
+    "project_id": "attendance-leaving",
+    "storage_bucket": "attendance-leaving.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064964084279:android:6950dac227c639d94be5b2",
+        "android_client_info": {
+          "package_name": "com.example.attendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064964084279-jpq9t0cv5h1iohri2k0moigok8pg43bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi0QLeDRhVDN2HFHu0phjgGAYQxWgKSDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064964084279-jpq9t0cv5h1iohri2k0moigok8pg43bi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

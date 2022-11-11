@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /employees/{documents=**} {
+      allow read:if true
+      allow write: if true
+    }
+    match /fcmTokens/{documents=**} {
+      allow read:if true
+      allow write: if true
+    }
+  }
+}
