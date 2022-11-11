@@ -1,8 +1,3 @@
-import 'package:attendance/core/utilities/dependency_injection.dart';
-import 'package:attendance/domain/entities/employee.dart';
-import 'package:attendance/domain/use%20cases/edit_employee_details_use_case.dart';
-import 'package:attendance/presentation/screens/zoom_drawer.dart';
-import 'package:attendance/presentation/widgets/allowed_delay_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -10,9 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../core/providers/app_provider.dart';
+import '../../domain/entities/employee.dart';
 import '../widgets/adding_new_employee_screen_folder/add_new_employee_text_field_widget.dart';
 import '../widgets/adding_new_employee_screen_folder/off_days_selector_widget.dart';
 import '../widgets/adding_new_employee_screen_folder/working_time_widget.dart';
+import '../widgets/allowed_delay_widget.dart';
 import '../widgets/edit_employee_details_screen_folder/edit_employees_details_button_widget.dart';
 import '../widgets/edit_employee_details_screen_folder/vacation_days_editing_widget.dart';
 
@@ -44,7 +41,6 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
     final workingFrom = appProvider.workingFrom;
     final workingTo = appProvider.workingTo;
     final mq = MediaQuery.of(context).size;
-    print(appProvider.vacationDays);
     return WillPopScope(
       onWillPop: () async {
         bool popWithoutSaving = false;

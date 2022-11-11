@@ -27,7 +27,8 @@ abstract class BaseRemoteDatasource {
     String allowedDelay,
   );
 
-  Future<void> removeEmployeeAbsence(bool isApologyAccepted, Employee employee);
+  Future<void> removeEmployeeAbsence(
+      bool isApologyAccepted, Employee employee, int daysRemoved);
 }
 
 class RemoteDataSource extends BaseRemoteDatasource {
@@ -128,7 +129,7 @@ class RemoteDataSource extends BaseRemoteDatasource {
 
   @override
   Future<void> removeEmployeeAbsence(
-      bool isApologyAccepted, Employee employee) async {
+      bool isApologyAccepted, Employee employee, int daysRemoved) async {
     await FirebaseFirestore.instance
         .collection('employees')
         .doc(employee.id)
@@ -137,8 +138,9 @@ class RemoteDataSource extends BaseRemoteDatasource {
         'isApologizing': false,
         'apologyMessage': null,
         'absenceDaysList': null,
-        'absenceDays':
-            isApologyAccepted ? employee.absenceDays - 1 : employee.absenceDays,
+        'absenceDays': isApologyAccepted
+            ? employee.absenceDays - daysRemoved
+            : employee.absenceDays,
       },
     );
   }

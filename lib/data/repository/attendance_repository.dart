@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:attendance/data/data%20source/attendance_local_data_source.dart';
 import 'package:flutter/material.dart';
 
@@ -76,8 +74,8 @@ class AttendanceRepository extends BaseAttendanceRepository {
 
   @override
   Future<void> removeEmployeeAbsence(
-      bool isApologyAccepted, Employee employee) async {
+      bool isApologyAccepted, Employee employee, int daysRemoved) async {
     await baseRemoteDatasource.removeEmployeeAbsence(
-        isApologyAccepted, employee);
+        isApologyAccepted, employee, daysRemoved);
   }
 }

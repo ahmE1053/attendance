@@ -47,7 +47,7 @@ class ZoomDrawerScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Icon(

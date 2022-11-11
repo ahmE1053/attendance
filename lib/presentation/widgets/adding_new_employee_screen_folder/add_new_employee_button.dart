@@ -1,8 +1,7 @@
-import 'package:attendance/core/providers/app_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animator/widgets/animator_widget.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../../../core/providers/app_provider.dart';
 import '../../../domain/use cases/add_new_employee_use_case.dart';
 import '../../screens/qr_code_screen.dart';
 

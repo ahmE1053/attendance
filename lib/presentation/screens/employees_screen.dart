@@ -1,20 +1,18 @@
-import 'package:attendance/core/providers/app_provider.dart';
-import 'package:attendance/core/providers/theme_provider.dart';
-import 'package:attendance/core/utilities/dependency_injection.dart';
-import 'package:attendance/domain/use%20cases/get_employees_data_use_case.dart';
-import 'package:attendance/presentation/screens/add_new_employee_screen.dart';
-import 'package:attendance/presentation/screens/apologize_notification_screen.dart';
-import 'package:attendance/presentation/screens/employee_details_screen.dart';
-import 'package:attendance/presentation/screens/zoom_drawer.dart';
 import 'package:badges/badges.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/other/employee_state_color_getter.dart';
+import '../../core/providers/app_provider.dart';
+import '../../core/providers/theme_provider.dart';
+import '../../core/utilities/dependency_injection.dart';
 import '../../domain/entities/employee.dart';
+import '../../domain/use cases/get_employees_data_use_case.dart';
+import 'apologize_notification_screen.dart';
+import 'zoom_drawer.dart';
+import 'employee_details_screen.dart';
 
 class GeneralEmployeesScreen extends StatefulWidget {
   static const id = 'GeneralEmployeesScreen';
@@ -51,28 +49,6 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
           },
         ),
         actions: [
-          IconButton(
-              onPressed: () async {
-                final a = await FirebaseFirestore.instance
-                    .collection('employees')
-                    .get();
-                a.docs.forEach(
-                  (element) {
-                    FirebaseFirestore.instance
-                        .collection('employees')
-                        .doc(element.id)
-                        .update(
-                      {
-                        'apologyMessage': 'aws',
-                        'isApologizing': true,
-                        'isTodayFirstDay': false,
-                        'detailedReport': [],
-                      },
-                    );
-                  },
-                );
-              },
-              icon: Icon(Icons.add)),
           IconButton(
             onPressed: () async {
               await themeProvider.changeMode();
@@ -113,7 +89,7 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                     child: const Icon(Icons.email),
                   ),
                 )
-              : SpinKitDoubleBounce(
+              : const SpinKitDoubleBounce(
                   color: Colors.white,
                 ),
         ],
@@ -301,6 +277,7 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                                 ),
                                 Expanded(
                                   child: Container(
+                                    padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: employeeStateColorGetter(
                                         employee.employeeState,

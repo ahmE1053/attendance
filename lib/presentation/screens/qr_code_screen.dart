@@ -1,12 +1,10 @@
-import 'package:attendance/core/utilities/dependency_injection.dart';
-import 'package:attendance/domain/use%20cases/get_qr_code_in_pdf_cloud_use_case.dart';
 import 'package:barcode_widget/barcode_widget.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
+import '../../core/utilities/dependency_injection.dart';
+import '../../domain/use cases/get_qr_code_in_pdf_cloud_use_case.dart';
 
 class QrCodeScreen extends StatefulWidget {
   final String name, id;
@@ -34,7 +32,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     downloadUrl = widget.downloadUrl;
   }
@@ -100,13 +97,17 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                   _buttonController.start();
                   final scaffold = ScaffoldMessenger.of(context);
 
+                  if (downloadUrl!.isEmpty) {
+                    downloadUrl = null;
+                  }
+
                   downloadUrl ??= await getIt
                       .get<GetQrCodeInPdfUseCaseCloud>()
                       .getQrCodeInPdfUseCaseCloud(widget.id, widget.name, mq);
-                  final url = Uri.parse('https://www.google.com');
+                  final url = Uri.parse(downloadUrl!);
                   if (!await launchUrl(
                     url,
-                    mode: LaunchMode.inAppWebView,
+                    mode: LaunchMode.externalApplication,
                   )) {
                     scaffold.showSnackBar(
                       SnackBar(

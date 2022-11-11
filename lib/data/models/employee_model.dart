@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,6 +23,7 @@ class EmployeeModel extends Employee {
     required super.allowedDelay,
     required super.isApologizing,
     required super.downloadUrl,
+    required super.absenceDaysList,
   });
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) {
@@ -31,9 +33,14 @@ class EmployeeModel extends Employee {
     final currentDayWorkingTo = json['currentDayWorkingTo'];
     final List<String> vacationDaysString =
         List<String>.from(json['vacationDays'] ?? []);
+    final List<Timestamp> absenceDaysList =
+        List<Timestamp>.from(json['absenceDaysList'] ?? []);
     final List<DateTime> vacationDays =
         vacationDaysString.map((e) => DateTime.parse(e)).toList();
+    final List<DateTime> absenceDaysListDatetime =
+        absenceDaysList.map((e) => e.toDate()).toList();
     return EmployeeModel(
+      absenceDaysList: absenceDaysListDatetime,
       currentDayWorkingFrom: currentDayWorkingFrom == null
           ? null
           : TimeOfDay.fromDateTime(format.parse(currentDayWorkingFrom)),

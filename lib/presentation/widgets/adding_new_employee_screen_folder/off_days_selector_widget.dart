@@ -1,7 +1,6 @@
-import 'package:attendance/core/providers/app_provider.dart';
-import 'package:attendance/core/utilities/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../../../core/providers/app_provider.dart';
 
 class OffDaysSelectorWidget extends StatelessWidget {
   const OffDaysSelectorWidget({
@@ -11,6 +10,7 @@ class OffDaysSelectorWidget extends StatelessWidget {
   }) : super(key: key);
   final AppProvider weekDaysProvider;
   final Size mq;
+
   @override
   Widget build(BuildContext context) {
     /*

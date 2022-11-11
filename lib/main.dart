@@ -56,8 +56,6 @@ class ProviderLayer extends StatelessWidget {
   }
 }
 
-//TODO if absence days are more than 1 give the option to remove 1 or how many days
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 

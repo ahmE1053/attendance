@@ -1,8 +1,7 @@
-import 'package:attendance/presentation/screens/apologize_notification_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import '../../domain/entities/employee.dart';
+import '../../presentation/widgets/apologize_notification_screen_widgets/apologize_card.dart';
 import '../../presentation/widgets/edit_employee_details_screen_folder/vacation_days_editing_widget.dart';
 
 class AppProvider extends ChangeNotifier {
@@ -38,11 +37,21 @@ class AppProvider extends ChangeNotifier {
   };
   String allowedDelayHours = '';
   String allowedDelayMinutes = '';
-  List<DateTime> vacationDays = [];
-  bool loading = false, errorState = false;
+  List<DateTime> vacationDays = [], absenceDaysList = [];
+  bool loading = false, errorState = false, absenceRemoverDone = false;
 
   TimeOfDay? workingFrom, workingTo;
   String? workingFromString, workingToString;
+
+  void addToAbsenceDaysList(DateTime day) {
+    absenceDaysList.add(day);
+    notifyListeners();
+  }
+
+  void removeFromAbsenceDaysList(DateTime day) {
+    absenceDaysList.remove(day);
+    notifyListeners();
+  }
 
   void onTap(String day, bool state) {
     weekDays[day]!['isSelected'] = !state;
@@ -59,7 +68,6 @@ class AppProvider extends ChangeNotifier {
 
   String correctWorkingTimesToIso(String workingTime) {
     final workingTimeList = workingTime.split(':');
-    print(workingTimeList);
     if (workingTimeList[0] == '0') {
       workingTimeList[0] = '00';
     }
@@ -164,8 +172,6 @@ class AppProvider extends ChangeNotifier {
   void deleteApologyMessage(
     Employee employee,
     int index,
-    RoundedLoadingButtonController roundedLoadingButtonController,
-    RoundedLoadingButtonController roundedLoadingButtonController2,
     GlobalKey<AnimatedListState> listKey,
   ) {
     listKey.currentState!.removeItem(
@@ -173,10 +179,8 @@ class AppProvider extends ChangeNotifier {
       index,
       (context, animation) => SizeTransition(
         sizeFactor: animation,
-        child: PeaceMaker(
+        child: ApologizeNotificationCard(
           employee: employee,
-          roundedLoadingButtonController: roundedLoadingButtonController,
-          roundedLoadingButtonController2: roundedLoadingButtonController2,
           expanded: true,
         ),
       ),

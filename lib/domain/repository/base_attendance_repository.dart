@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../entities/employee.dart';
@@ -31,5 +29,6 @@ abstract class BaseAttendanceRepository {
 
   Future<void> checkForFirstTime();
 
-  Future<void> removeEmployeeAbsence(bool isApologyAccepted, Employee employee);
+  Future<void> removeEmployeeAbsence(
+      bool isApologyAccepted, Employee employee, int daysRemoved);
 }

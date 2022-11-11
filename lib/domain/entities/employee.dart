@@ -16,7 +16,7 @@ class Employee extends Equatable {
   final bool isApologizing;
 
   final int lateInMinutes, absenceDays;
-  final List<DateTime> vacationDays;
+  final List<DateTime> vacationDays, absenceDaysList;
   final List<int> offDays;
   final List<Map<String, dynamic>> detailedReport;
 
@@ -38,6 +38,7 @@ class Employee extends Equatable {
     required this.apologyMessage,
     required this.isApologizing,
     required this.downloadUrl,
+    required this.absenceDaysList,
   });
 
   @override
@@ -59,5 +60,6 @@ class Employee extends Equatable {
         apologyMessage,
         isApologizing,
         downloadUrl,
+        absenceDaysList,
       ];
 }

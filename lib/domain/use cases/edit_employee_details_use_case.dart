@@ -1,7 +1,5 @@
 import 'package:attendance/core/utilities/dependency_injection.dart';
-import 'package:attendance/data/repository/attendance_repository.dart';
 import 'package:attendance/domain/repository/base_attendance_repository.dart';
-import 'package:flutter/material.dart';
 
 import '../entities/employee.dart';
 

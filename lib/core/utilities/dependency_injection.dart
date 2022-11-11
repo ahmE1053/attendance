@@ -1,4 +1,4 @@
-import 'package:attendance/domain/use%20cases/remove_employe_absence_use_case.dart';
+import 'package:attendance/domain/use%20cases/remove_employee_absence_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

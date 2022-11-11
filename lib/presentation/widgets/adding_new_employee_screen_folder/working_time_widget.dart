@@ -1,7 +1,6 @@
-import 'package:attendance/core/providers/app_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animator/flutter_animator.dart';
-import 'package:flutter_animator/widgets/animator_widget.dart';
+
+import '../../../core/providers/app_provider.dart';
 
 class WorkingTimeSelectionWidget extends StatelessWidget {
   const WorkingTimeSelectionWidget({
