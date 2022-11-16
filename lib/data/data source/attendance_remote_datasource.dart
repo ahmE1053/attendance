@@ -18,14 +18,13 @@ abstract class BaseRemoteDatasource {
   Future<String> addQrCodePdfToCloudAndGetLink(String id, String name, Size mq);
 
   Future<void> editEmployeeDetails(
-    Employee employee,
-    String newName,
-    String workingFrom,
-    String workingTo,
-    List<int> offDays,
-    List<DateTime> vacationDays,
-    String allowedDelay,
-  );
+      Employee employee,
+      String newName,
+      String workingFrom,
+      String workingTo,
+      List<int> offDays,
+      List<DateTime> vacationDays,
+      String allowedDelay);
 
   Future<void> removeEmployeeAbsence(
       bool isApologyAccepted, Employee employee, int daysRemoved);
@@ -35,7 +34,9 @@ class RemoteDataSource extends BaseRemoteDatasource {
   @override
   Future<Employee> addNewEmployee(String name, String workingFrom,
       String workingTo, List<int> offDays, String allowedDelay) async {
-    final fireStoreRef = FirebaseFirestore.instance.collection('employees');
+    final fireStoreInstance = FirebaseFirestore.instance;
+    final fireStoreRef = fireStoreInstance.collection('employees');
+
     final json = {
       'name': name,
       'currentDayWorkingFrom': null,
@@ -112,6 +113,7 @@ class RemoteDataSource extends BaseRemoteDatasource {
   ) async {
     final List<String> vacationDaysString =
         vacationDays.map((e) => e.toIso8601String()).toList();
+
     await FirebaseFirestore.instance
         .collection('employees')
         .doc(employee.id)
@@ -136,7 +138,7 @@ class RemoteDataSource extends BaseRemoteDatasource {
         .update(
       {
         'isApologizing': false,
-        'apologyMessage': null,
+        'apologyMessage': '',
         'absenceDaysList': null,
         'absenceDays': isApologyAccepted
             ? employee.absenceDays - daysRemoved

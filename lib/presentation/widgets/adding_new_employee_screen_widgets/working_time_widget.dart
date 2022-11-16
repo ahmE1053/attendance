@@ -85,11 +85,13 @@ class WorkingTimeWidget extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () async {
             FocusManager.instance.primaryFocus!.unfocus();
-
             await weekDaysProvider.editWorkingHours(context, toOrFrom);
           },
           child: Text(
             text,
+            style: const TextStyle(
+              fontFamily: 'Cairo',
+            ),
           ),
         ),
       );
@@ -102,8 +104,11 @@ class WorkingTimeWidget extends StatelessWidget {
               child: Text(
                 '$text:',
                 style: TextStyle(
-                    fontSize: mq.width * 0.07,
-                    color: Theme.of(context).colorScheme.onPrimary),
+                  fontSize: mq.width * 0.07,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontFamily: 'Cairo',
+                ),
               ),
             ),
           ),
@@ -124,6 +129,7 @@ class WorkingTimeWidget extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  fontFamily: 'Cairo',
                 ),
               ),
             ),

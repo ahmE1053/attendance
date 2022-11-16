@@ -1,7 +1,10 @@
+import 'package:attendance/other/network_problem_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:provider/provider.dart';
 
+import '../../core/providers/network_provider.dart';
 import 'add_new_employee_screen.dart';
 import 'employees_screen.dart';
 
@@ -14,12 +17,14 @@ class ZoomDrawerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final networkProvider = Provider.of<NetworkProvider>(context);
+    final isConnectionWorking = networkProvider.isConnectionWorking;
     final mq = MediaQuery.of(context).size;
     return ZoomDrawer(
       controller: zoomDrawerController,
       isRtl: true,
       angle: 0,
-      menuBackgroundColor: const Color(0xffE3A6ED),
+      menuBackgroundColor: Theme.of(context).colorScheme.primaryContainer,
       slideWidth: mq.width * 0.3,
       mainScreenScale: 0.1,
       mainScreenTapClose: true,
@@ -31,13 +36,18 @@ class ZoomDrawerScreen extends StatelessWidget {
         child: Center(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                AddNewEmployee.id,
-              );
-              zoomDrawerController.close!();
-            },
+            onTap: !isConnectionWorking
+                ? () {
+                    networkProblemNotifier(context);
+                    zoomDrawerController.close!();
+                  }
+                : () {
+                    Navigator.pushNamed(
+                      context,
+                      AddNewEmployee.id,
+                    );
+                    zoomDrawerController.close!();
+                  },
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -53,7 +63,7 @@ class ZoomDrawerScreen extends StatelessWidget {
                     child: Icon(
                       Icons.add,
                       size: mq.width * 0.08,
-                      color: const Color(0xffE3A6ED),
+                      color: Theme.of(context).colorScheme.primaryContainer,
                     ),
                   ),
                 ),

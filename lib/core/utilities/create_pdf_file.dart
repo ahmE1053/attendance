@@ -36,10 +36,7 @@ class CreatePdfFile {
                     name,
                     textDirection: pw.TextDirection.rtl,
                     textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(
-                      fontSize: mq.width * 0.08,
-                      font: font,
-                    ),
+                    style: pw.TextStyle(fontSize: mq.width * 0.08, font: font),
                   ),
                 ),
               ),

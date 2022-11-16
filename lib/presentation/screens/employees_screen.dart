@@ -1,18 +1,15 @@
-import 'package:badges/badges.dart';
+import 'package:attendance/core/providers/network_provider.dart';
+import 'package:attendance/presentation/widgets/employees_screen_widgets/table_entry_landscape.dart';
+import 'package:attendance/presentation/widgets/no_connection_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/other/employee_state_color_getter.dart';
 import '../../core/providers/app_provider.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../core/utilities/dependency_injection.dart';
 import '../../domain/entities/employee.dart';
 import '../../domain/use cases/get_employees_data_use_case.dart';
-import 'apologize_notification_screen.dart';
-import 'zoom_drawer.dart';
-import 'employee_details_screen.dart';
+import '../widgets/employees_screen_widgets/exports.dart';
 
 class GeneralEmployeesScreen extends StatefulWidget {
   static const id = 'GeneralEmployeesScreen';
@@ -38,65 +35,21 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final networkProvider = Provider.of<NetworkProvider>(context);
+    final isConnectionWorking = networkProvider.isConnectionWorking;
     final mq = MediaQuery.of(context).size;
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.list),
-          onPressed: () {
-            zoomDrawerController.open!();
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await themeProvider.changeMode();
-            },
-            icon: themeProvider.darkMode
-                ? const Icon(
-                    Icons.sunny,
-                  )
-                : const Icon(
-                    Icons.nightlight_round_sharp,
-                  ),
-          ),
-          isLoaded
-              ? IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ApologizeNotificationScreen(
-                          employeesList: employeesList
-                              .where((element) => element.isApologizing == true)
-                              .toList(),
-                        ),
-                      ),
-                    );
-                  },
-                  icon: Badge(
-                    badgeContent: Text(
-                      employeesList
-                          .where((element) => element.isApologizing == true)
-                          .length
-                          .toString(),
-                    ),
-                    position: BadgePosition.topStart(),
-                    showBadge: employeesList
-                        .where((element) => element.isApologizing == true)
-                        .isNotEmpty,
-                    child: const Icon(Icons.email),
-                  ),
-                )
-              : const SpinKitDoubleBounce(
-                  color: Colors.white,
-                ),
-        ],
-        title: const Text('الموظفين'),
+      appBar: EmployeesScreenAppBar(
+          themeProvider: themeProvider,
+          isLoaded: isLoaded,
+          isConnectionWorking: isConnectionWorking,
+          employeesList: employeesList),
+      bottomNavigationBar: NoConnectionBottomBar(
+        isConnectionWorking ? 0 : mq.height * 0.07,
       ),
       body: DefaultTextStyle(
-        style: GoogleFonts.cairo(),
+        style: const TextStyle(fontFamily: 'Cairo'),
         child: StreamBuilder(
           stream: employeesStream,
           builder: (context, snapshot) {
@@ -114,30 +67,13 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                 setState(() {});
               });
               if (employeesList.isEmpty) {
-                return Padding(
-                  padding: EdgeInsets.all(mq.width * 0.1),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Image.asset(
-                        'assets/not_found.gif',
-                        fit: BoxFit.fill,
-                      ),
-                      FittedBox(
-                        child: Text(
-                          'لم يتم اضافة اي موظفين',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: mq.width * 0.08,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                if (!isConnectionWorking) {
+                  //shows if no connection and first time
+                  //otherwise firestore saves the data on the phone's storage
+                  return EmployeesScreenNoConnectionWidget(mq: mq);
+                }
+                return EmployeesScreenNoEmployeesWidget(mq: mq);
               }
-
               return Container(
                 margin: const EdgeInsets.all(10),
                 padding: const EdgeInsets.all(10),
@@ -147,172 +83,44 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.surface,
                 ),
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return DefaultTextStyle(
-                        style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'الاسم',
-                                  style: TextStyle(
-                                    fontSize: mq.width * 0.07,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'التأخر ',
-                                  style: TextStyle(
-                                    fontSize: mq.width * 0.07,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'الغياب',
-                                  style: TextStyle(
-                                    fontSize: mq.width * 0.07,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'الحالة',
-                                  style: TextStyle(
-                                    fontSize: mq.width * 0.07,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                          ],
-                        ),
+                child: OrientationBuilder(
+                  builder: (context, orientation) {
+                    if (orientation == Orientation.portrait) {
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return EmployeesScreenTableHeaderWidget(mq: mq);
+                          } else {
+                            final employee = employeesList[index - 1];
+                            return EmployeesScreenTableEntryWidget(
+                                employee: employee, mq: mq);
+                          }
+                        },
+                        itemCount: employeesList.length + 1,
                       );
                     } else {
-                      final employee = employeesList[index - 1];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => EmployeeInfoScreen(
-                                employee: employee,
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return SizedBox(
+                              height: mq.height * 0.15,
+                              child: EmployeesScreenTableHeaderWidget(
+                                mq: mq,
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            final employee = employeesList[index - 1];
+                            return SizedBox(
+                              height: mq.height * 0.3,
+                              child: EmployeesScreenTableEntryWidget(
+                                  employee: employee, mq: mq),
+                            );
+                          }
                         },
-                        child: DefaultTextStyle(
-                          style: GoogleFonts.cairo(
-                            color: Colors.black,
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 20),
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Hero(
-                                      tag: employee.id,
-                                      child: Material(
-                                        type: MaterialType
-                                            .transparency, // likely needed
-                                        child: Text(
-                                          employee.name,
-                                          style: TextStyle(
-                                            fontSize: mq.width * 0.08,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      employee.lateInMinutes.toString(),
-                                      style: TextStyle(
-                                        fontSize: mq.width * 0.07,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      employee.absenceDays.toString(),
-                                      style: TextStyle(
-                                        fontSize: mq.width * 0.07,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: employeeStateColorGetter(
-                                        employee.employeeState,
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        employee.employeeState ==
-                                                'خارج ساعات العمل'
-                                            ? 'خارج ساعات\nالعمل'
-                                            : employee.employeeState,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.cairo(
-                                          fontSize: mq.width * 0.07,
-                                          color:
-                                              employee.employeeState == 'غائب'
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                        ),
+                        itemCount: employeesList.length + 1,
                       );
                     }
                   },
-                  itemCount: employeesList.length + 1,
                 ),
               );
             }

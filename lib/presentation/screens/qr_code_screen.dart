@@ -1,10 +1,13 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/providers/network_provider.dart';
 import '../../core/utilities/dependency_injection.dart';
 import '../../domain/use cases/get_qr_code_in_pdf_cloud_use_case.dart';
+import '../widgets/no_connection_bottom_bar.dart';
 
 class QrCodeScreen extends StatefulWidget {
   final String name, id;
@@ -38,6 +41,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final networkProvider = Provider.of<NetworkProvider>(context);
+    final isConnectionWorking = networkProvider.isConnectionWorking;
     final mq = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -59,6 +64,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         }
       },
       child: Scaffold(
+        bottomNavigationBar: NoConnectionBottomBar(
+          isConnectionWorking ? 0 : mq.height * 0.07,
+        ),
         appBar: AppBar(
           title: const Text(
             'الكود الخاص بالموظف',
@@ -92,53 +100,58 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 drawText: true,
               ),
               RoundedLoadingButton(
-                onPressed: () async {
-                  isThePdfSaved = true;
-                  _buttonController.start();
-                  final scaffold = ScaffoldMessenger.of(context);
+                onPressed: !isConnectionWorking
+                    ? null
+                    : () async {
+                        isThePdfSaved = true;
+                        _buttonController.start();
+                        final scaffold = ScaffoldMessenger.of(context);
 
-                  if (downloadUrl!.isEmpty) {
-                    downloadUrl = null;
-                  }
+                        if (downloadUrl!.isEmpty) {
+                          downloadUrl = null;
+                        }
+                        downloadUrl = await getIt
+                            .get<GetQrCodeInPdfUseCaseCloud>()
+                            .getQrCodeInPdfUseCaseCloud(
+                              widget.id,
+                              widget.name,
+                              mq,
+                            );
+                        final url = Uri.parse(downloadUrl!);
+                        if (!await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          scaffold.showSnackBar(
+                            SnackBar(
+                              content: const Text(
+                                'حدث خطأ، برجاء إعادة المحاولة',
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                          _buttonController.error();
+                          Future.delayed(const Duration(milliseconds: 700))
+                              .then((value) => _buttonController.reset());
+                          return;
+                        }
 
-                  downloadUrl ??= await getIt
-                      .get<GetQrCodeInPdfUseCaseCloud>()
-                      .getQrCodeInPdfUseCaseCloud(widget.id, widget.name, mq);
-                  final url = Uri.parse(downloadUrl!);
-                  if (!await launchUrl(
-                    url,
-                    mode: LaunchMode.externalApplication,
-                  )) {
-                    scaffold.showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'حدث خطأ، برجاء إعادة المحاولة',
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                    _buttonController.error();
-                    Future.delayed(const Duration(milliseconds: 700))
-                        .then((value) => _buttonController.reset());
-                    return;
-                  }
-
-                  scaffold.showSnackBar(
-                    SnackBar(
-                      content: const Text(
-                        'تم حفظ الملف الى ملف التحميلات الخاص بهاتفك',
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                  _buttonController.success();
-                },
+                        scaffold.showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                              'تم حفظ الملف الى ملف التحميلات الخاص بهاتفك',
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                        _buttonController.success();
+                      },
                 successColor: Colors.greenAccent,
                 controller: _buttonController,
                 color: Theme.of(context).colorScheme.primary,

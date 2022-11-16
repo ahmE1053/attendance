@@ -1,10 +1,9 @@
+import 'package:attendance/core/providers/network_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'core/providers/app_provider.dart';
@@ -17,7 +16,7 @@ import 'domain/use cases/check_theme_first_time_use_case.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -29,14 +28,18 @@ void main() async {
           .set({'token': value});
     },
   );
-  await FlutterDownloader.initialize(
-      debug: true,
-      // optional: set to false to disable printing logs to console (default: true)
-      ignoreSsl:
-          true // option: set to false to disable working with http links (default: false)
-      );
+  binding.addPostFrameCallback(
+    (_) async {
+      BuildContext? context = binding.renderViewElement;
+      if (context != null) {
+        precacheImage(const AssetImage('assets/no_connection.png'), context);
+        precacheImage(const AssetImage('assets/not_found.gif'), context);
+      }
+    },
+  );
   await injection();
   await getIt.get<CheckThemeFirstTimeUseCase>().run();
+  // GoogleFonts.config.allowRuntimeFetching = false;
   runApp(const ProviderLayer());
 }
 
@@ -50,23 +53,38 @@ class ProviderLayer extends StatelessWidget {
         ChangeNotifierProvider(create: (BuildContext context) => AppProvider()),
         ChangeNotifierProvider(
             create: (BuildContext context) => ThemeProvider()),
+        ChangeNotifierProvider(
+            create: (BuildContext context) => NetworkProvider()),
       ],
       child: const MyApp(),
     );
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<NetworkProvider>(context, listen: false)
+        .changeIsConnectionWorking();
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
-      theme: ThemeData.from(
-        textTheme: GoogleFonts.cairoTextTheme(),
+      theme: ThemeData(
+        fontFamily: 'cairo',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.purpleAccent,
+          seedColor: Colors.redAccent,
           brightness: themeProvider.getTheme(),
         ),
       ),

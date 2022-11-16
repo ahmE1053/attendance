@@ -11,15 +11,18 @@ class EmployeeDetailsReport extends StatelessWidget {
     required this.isDarkMode,
     required this.colorScheme,
     required this.employee,
+    required this.isPortrait,
   }) : super(key: key);
 
   final Size mq;
-  final bool isDarkMode;
+
+  final bool isDarkMode, isPortrait;
   final ColorScheme colorScheme;
   final Employee employee;
 
   @override
   Widget build(BuildContext context) {
+    final fontSize = isPortrait ? mq.width * 0.07 : mq.height * 0.07;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -72,7 +75,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   child: Text(
                                     'اليوم',
                                     style: TextStyle(
-                                      fontSize: mq.width * 0.07,
+                                      fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
                                       color: Theme.of(context)
                                           .colorScheme
@@ -88,7 +91,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   child: Text(
                                     'الحالة',
                                     style: TextStyle(
-                                      fontSize: mq.width * 0.07,
+                                      fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
                                       color: Theme.of(context)
                                           .colorScheme
@@ -104,7 +107,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   child: Text(
                                     'الحضور',
                                     style: TextStyle(
-                                      fontSize: mq.width * 0.07,
+                                      fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
                                       color: Theme.of(context)
                                           .colorScheme
@@ -120,7 +123,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   child: Text(
                                     'الانصراف',
                                     style: TextStyle(
-                                      fontSize: mq.width * 0.07,
+                                      fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
                                       color: Theme.of(context)
                                           .colorScheme
@@ -167,7 +170,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   finalCurrentDay,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: mq.width * 0.07,
+                                    fontSize: fontSize,
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
@@ -180,7 +183,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                 child: Text(
                                   detailedReportForDay['todayState'],
                                   style: TextStyle(
-                                    fontSize: mq.width * 0.07,
+                                    fontSize: fontSize,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
@@ -195,7 +198,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                     detailedReportForDay[
                                         'currentDayWorkingFrom'],
                                     style: TextStyle(
-                                      fontSize: mq.width * 0.07,
+                                      fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -208,7 +211,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   child: Text(
                                     detailedReportForDay['currentDayWorkingTo'],
                                     style: TextStyle(
-                                      fontSize: mq.width * 0.07,
+                                      fontSize: fontSize,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -222,7 +225,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   'لا يوجد',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: mq.width * 0.07,
+                                    fontSize: fontSize,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

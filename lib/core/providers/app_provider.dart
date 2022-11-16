@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/entities/employee.dart';
 import '../../presentation/widgets/apologize_notification_screen_widgets/apologize_card.dart';
-import '../../presentation/widgets/edit_employee_details_screen_folder/vacation_days_editing_widget.dart';
+import '../../presentation/widgets/edit_employee_details_screen_widgets/exports.dart';
 
 class AppProvider extends ChangeNotifier {
   var weekDays = {
@@ -169,11 +169,12 @@ class AppProvider extends ChangeNotifier {
     vacationDays.remove(day);
   }
 
-  void deleteApologyMessage(
+  Future<void> deleteApologyMessage(
     Employee employee,
     int index,
     GlobalKey<AnimatedListState> listKey,
-  ) {
+    bool isConnectionWorking,
+  ) async {
     listKey.currentState!.removeItem(
       duration: const Duration(milliseconds: 500),
       index,
@@ -182,9 +183,11 @@ class AppProvider extends ChangeNotifier {
         child: ApologizeNotificationCard(
           employee: employee,
           expanded: true,
+          isConnectionWorking: isConnectionWorking,
         ),
       ),
     );
+    await Future.delayed(const Duration(milliseconds: 500));
   }
 
   List<int> offDaysGetter() {

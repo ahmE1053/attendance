@@ -12,6 +12,7 @@ class ApologizeNotificationCard extends StatelessWidget {
   const ApologizeNotificationCard({
     Key? key,
     required this.employee,
+    required this.isConnectionWorking,
     this.function,
     required this.expanded,
     this.appProvider,
@@ -19,12 +20,13 @@ class ApologizeNotificationCard extends StatelessWidget {
   final Employee employee;
 
   final void Function()? function;
-  final bool expanded;
+  final bool expanded, isConnectionWorking;
   final AppProvider? appProvider;
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -72,39 +74,45 @@ class ApologizeNotificationCard extends StatelessWidget {
                 width: mq.width * 0.35,
                 height: mq.height * 0.05,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (context) {
-                        context.watch<AppProvider>();
-                        final format = DateFormat.yMMMMd('ar-Eg');
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: AbsenceDaysRemoverWidget(
-                              mq: mq,
-                              employee: employee,
-                              appProvider: appProvider,
-                              format: format),
-                        );
-                      },
-                    );
-                    if (appProvider!.absenceRemoverDone) {
-                      await getIt.get<RemoveEmployeeAbsenceUseCase>().run(
-                          true, employee, appProvider!.absenceDaysList.length);
-                      (function ?? () {}).call();
-                    }
-                    appProvider!.absenceDaysList.clear();
-                    appProvider!.absenceRemoverDone = false;
-                  },
+                  onPressed: !isConnectionWorking
+                      ? null
+                      : () async {
+                          await showDialog(
+                            context: context,
+                            builder: (context) {
+                              context.watch<AppProvider>();
+                              final format = DateFormat.yMMMMd('ar-Eg');
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: AbsenceDaysRemoverWidget(
+                                    mq: mq,
+                                    employee: employee,
+                                    appProvider: appProvider,
+                                    format: format),
+                              );
+                            },
+                          );
+                          if (appProvider!.absenceRemoverDone) {
+                            await getIt.get<RemoveEmployeeAbsenceUseCase>().run(
+                                true,
+                                employee,
+                                appProvider!.absenceDaysList.length);
+                            (function ?? () {}).call();
+                          }
+                          appProvider!.absenceDaysList.clear();
+                          appProvider!.absenceRemoverDone = false;
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.greenAccent,
                   ),
-                  child: const Text(
+                  child: Text(
                     'قبول',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: !isConnectionWorking
+                          ? Theme.of(context).colorScheme.onBackground
+                          : Colors.black,
                     ),
                   ),
                 ),
@@ -116,16 +124,20 @@ class ApologizeNotificationCard extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.redAccent,
                   ),
-                  onPressed: () async {
-                    await getIt
-                        .get<RemoveEmployeeAbsenceUseCase>()
-                        .run(false, employee, 0);
-                    (function ?? () {}).call();
-                  },
-                  child: const Text(
+                  onPressed: !isConnectionWorking
+                      ? null
+                      : () async {
+                          await getIt
+                              .get<RemoveEmployeeAbsenceUseCase>()
+                              .run(false, employee, 0);
+                          (function ?? () {}).call();
+                        },
+                  child: Text(
                     'رفض',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: !isConnectionWorking
+                          ? Theme.of(context).colorScheme.onBackground
+                          : Colors.white,
                     ),
                   ),
                 ),

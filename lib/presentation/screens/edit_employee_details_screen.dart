@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../core/providers/app_provider.dart';
+import '../../core/providers/network_provider.dart';
 import '../../domain/entities/employee.dart';
-import '../widgets/adding_new_employee_screen_folder/add_new_employee_text_field_widget.dart';
-import '../widgets/adding_new_employee_screen_folder/off_days_selector_widget.dart';
-import '../widgets/adding_new_employee_screen_folder/working_time_widget.dart';
-import '../widgets/allowed_delay_widget.dart';
-import '../widgets/edit_employee_details_screen_folder/edit_employees_details_button_widget.dart';
-import '../widgets/edit_employee_details_screen_folder/vacation_days_editing_widget.dart';
+import '../widgets/adding_new_employee_screen_widgets/exports.dart';
+import '../widgets/edit_employee_details_screen_widgets/exports.dart';
+import '../widgets/exports.dart';
 
 class EditEmployeeDetailsScreen extends StatefulWidget {
   const EditEmployeeDetailsScreen({
@@ -36,6 +33,8 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final networkProvider = Provider.of<NetworkProvider>(context);
+    final isConnectionWorking = networkProvider.isConnectionWorking;
     final employee = widget.employee;
     final appProvider = Provider.of<AppProvider>(context);
     final workingFrom = appProvider.workingFrom;
@@ -102,18 +101,28 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
           FocusManager.instance.primaryFocus!.unfocus();
         },
         child: Scaffold(
-          bottomNavigationBar: SizedBox(
-            height: mq.height * 0.07,
-            child: EditEmployeeDetailsButton(
-              appProvider: appProvider,
-              employee: employee,
-              widget: widget,
-              workingTo: workingTo,
-              workingFrom: workingFrom,
-              allowedDelayHours: appProvider.allowedDelayHours,
-              allowedDelayMinutes: appProvider.allowedDelayMinutes,
-              mq: mq,
-            ),
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: mq.height * 0.07,
+                child: EditEmployeeDetailsButton(
+                  isConnectionWorking: isConnectionWorking,
+                  appProvider: appProvider,
+                  employee: employee,
+                  widget: widget,
+                  workingTo: workingTo,
+                  workingFrom: workingFrom,
+                  allowedDelayHours: appProvider.allowedDelayHours,
+                  allowedDelayMinutes: appProvider.allowedDelayMinutes,
+                  mq: mq,
+                ),
+              ),
+              NoConnectionBottomBar(
+                isConnectionWorking ? 0 : mq.height * 0.07,
+              ),
+            ],
           ),
           appBar: AppBar(
             title: const Text('تعديل بيانات الموظف'),
@@ -133,7 +142,7 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                       ElevatedButtonTheme(
                         data: ElevatedButtonThemeData(
                           style: ElevatedButton.styleFrom(
-                            textStyle: GoogleFonts.cairo(
+                            textStyle: TextStyle(
                               fontSize: mq.width * 0.05,
                               fontWeight: FontWeight.w800,
                               color: Theme.of(context).colorScheme.primary,
