@@ -33,7 +33,6 @@ class AddNewEmployeeButton extends StatelessWidget {
         ),
       ),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(),
         onPressed: !isConnectionWorking
             ? null
             : () async {

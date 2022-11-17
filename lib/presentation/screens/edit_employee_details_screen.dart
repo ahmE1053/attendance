@@ -39,7 +39,9 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
     final appProvider = Provider.of<AppProvider>(context);
     final workingFrom = appProvider.workingFrom;
     final workingTo = appProvider.workingTo;
-    final mq = MediaQuery.of(context).size;
+    final mediaQuery = MediaQuery.of(context);
+    final isPortrait = mediaQuery.orientation == Orientation.portrait;
+    final mq = mediaQuery.size;
     return WillPopScope(
       onWillPop: () async {
         bool popWithoutSaving = false;
@@ -100,193 +102,444 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
         onTap: () {
           FocusManager.instance.primaryFocus!.unfocus();
         },
-        child: Scaffold(
-          bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: mq.height * 0.07,
-                child: EditEmployeeDetailsButton(
-                  isConnectionWorking: isConnectionWorking,
-                  appProvider: appProvider,
-                  employee: employee,
-                  widget: widget,
-                  workingTo: workingTo,
-                  workingFrom: workingFrom,
-                  allowedDelayHours: appProvider.allowedDelayHours,
-                  allowedDelayMinutes: appProvider.allowedDelayMinutes,
-                  mq: mq,
-                ),
-              ),
-              NoConnectionBottomBar(
-                isConnectionWorking ? 0 : mq.height * 0.07,
-              ),
-            ],
-          ),
-          appBar: AppBar(
-            title: const Text('تعديل بيانات الموظف'),
-          ),
-          body: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      AddNewEmployeeTextField(
-                        formKey: _formKey,
-                        textEditingController: widget.textEditingController,
-                      ),
-                      ElevatedButtonTheme(
-                        data: ElevatedButtonThemeData(
-                          style: ElevatedButton.styleFrom(
-                            textStyle: TextStyle(
-                              fontSize: mq.width * 0.05,
-                              fontWeight: FontWeight.w800,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            backgroundColor: appProvider.errorState
-                                ? Colors.red
-                                : Theme.of(context).colorScheme.background,
-                            foregroundColor: appProvider.errorState
-                                ? Colors.white
-                                : Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        child: WorkingTimeSelectionWidget(
-                          mq: mq,
-                          workingFrom: workingFrom,
-                          weekDaysProvider: appProvider,
-                          workingTo: workingTo,
-                        ),
-                      ),
-                      OffDaysSelectorWidget(
-                        weekDaysProvider: appProvider,
-                        mq: mq,
-                      ),
-                      SizedBox(height: mq.width * 0.04),
-                      AllowedDelayWidget(mq: mq),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FittedBox(
-                              alignment: Alignment.centerRight,
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'الاجازات الاضافية',
-                                style: TextStyle(
-                                  fontSize: mq.width * 0.07,
-                                  fontWeight: FontWeight.w700,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            borderRadius: BorderRadius.circular(320),
-                            splashColor: Theme.of(context).colorScheme.primary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: CircleAvatar(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                child: const Icon(Icons.add),
-                              ),
-                            ),
-                            onTap: () async {
-                              final scaffoldMessenger =
-                                  ScaffoldMessenger.of(context);
-                              final theme = Theme.of(context).colorScheme;
-                              final vacationDay = await showDatePicker(
-                                context: context,
-                                initialDate:
-                                    DateTime.now().add(const Duration(days: 1)),
-                                firstDate:
-                                    DateTime.now().add(const Duration(days: 1)),
-                                lastDate: DateTime(
-                                  DateTime.now().year + 2,
-                                ),
-                              );
-                              if (appProvider.vacationDays
-                                  .contains(vacationDay)) {
-                                scaffoldMessenger.showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'تم اضافة هذا اليوم بالفعل',
-                                    ),
-                                    backgroundColor: theme.onBackground,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                                return;
-                              }
-                              if (vacationDay != null) {
-                                appProvider.addToVacationDays(
-                                  vacationDay,
-                                  _animatedListKey,
-                                );
-                                await Future.delayed(
-                                  const Duration(milliseconds: 700),
-                                );
-                                _scrollController.animateTo(
-                                  _scrollController.position.maxScrollExtent +
-                                      100,
-                                  duration: const Duration(milliseconds: 800),
-                                  curve: Curves.easeInOut,
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      if (appProvider.vacationDays.isEmpty)
-                        Text(
-                          'لا يوجد اي اجازات اضافية للموظف',
-                          style: TextStyle(
-                            fontSize: mq.width * 0.05,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                    ],
+        child: SafeArea(
+          child: Scaffold(
+            bottomNavigationBar: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: isPortrait ? mq.height * 0.07 : mq.width * 0.07,
+                  child: EditEmployeeDetailsButton(
+                    listKey: _animatedListKey,
+                    isConnectionWorking: isConnectionWorking,
+                    appProvider: appProvider,
+                    employee: employee,
+                    widget: widget,
+                    workingTo: workingTo,
+                    workingFrom: workingFrom,
+                    allowedDelayHours: appProvider.allowedDelayHours,
+                    allowedDelayMinutes: appProvider.allowedDelayMinutes,
+                    mq: mq,
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
-                sliver: SliverAnimatedList(
-                  initialItemCount: appProvider.vacationDays.length,
-                  key: _animatedListKey,
-                  itemBuilder: (context, index, animation) {
-                    final vacationDay = appProvider.vacationDays[index];
-                    final String formattedDayInArabic =
-                        DateFormat.yMMMMEEEEd('ar').format(vacationDay);
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      child: VacationDaysEditingWidget(
-                        vacationDay: vacationDay,
-                        fontSize: mq.width * 0.045,
-                        onTapFunction: () {
-                          appProvider.deleteDayFromVacationDays(
-                            vacationDay,
-                            _animatedListKey,
-                            mq.width * 0.045,
-                            formattedDayInArabic,
-                          );
-                        },
-                        formattedDayInArabic: formattedDayInArabic,
-                      ),
-                    );
-                  },
+                NoConnectionBottomBar(
+                  isConnectionWorking
+                      ? 0
+                      : isPortrait
+                          ? mq.height * 0.07
+                          : mq.width * 0.07,
                 ),
-              ),
-            ],
+              ],
+            ),
+            appBar: AppBar(
+              title: const Text('تعديل بيانات الموظف'),
+            ),
+            body: Builder(
+              builder: (context) {
+                if (isPortrait) {
+                  return CustomScrollView(
+                    physics: BouncingScrollPhysics(),
+                    controller: _scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding:
+                            const EdgeInsets.only(top: 20, right: 20, left: 20),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              AddNewEmployeeTextField(
+                                formKey: _formKey,
+                                textEditingController:
+                                    widget.textEditingController,
+                              ),
+                              SizedBox(height: mq.width * 0.04),
+                              ElevatedButtonTheme(
+                                data: ElevatedButtonThemeData(
+                                  style: ElevatedButton.styleFrom(
+                                    textStyle: TextStyle(
+                                      fontSize: mq.width * 0.05,
+                                      fontWeight: FontWeight.w800,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    backgroundColor: appProvider.errorState
+                                        ? Colors.red
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                    foregroundColor: appProvider.errorState
+                                        ? Colors.white
+                                        : Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                                child: WorkingTimeSelectionWidget(
+                                  isPortrait: isPortrait,
+                                  fontSize: mq.width * 0.07,
+                                  mq: mq,
+                                  workingFrom: workingFrom,
+                                  weekDaysProvider: appProvider,
+                                  workingTo: workingTo,
+                                ),
+                              ),
+                              SizedBox(height: mq.width * 0.04),
+                              OffDaysSelectorWidget(
+                                isPortrait: isPortrait,
+                                weekDaysProvider: appProvider,
+                                mq: mq,
+                              ),
+                              SizedBox(height: mq.width * 0.04),
+                              SizedBox(
+                                height: mq.height * 0.25,
+                                child: AllowedDelayWidget(
+                                  mq: mq,
+                                  isPortrait: isPortrait,
+                                ),
+                              ),
+                              SizedBox(height: mq.width * 0.04),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FittedBox(
+                                      alignment: Alignment.centerRight,
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        'الاجازات الاضافية',
+                                        style: TextStyle(
+                                          fontSize: mq.width * 0.07,
+                                          fontWeight: FontWeight.w700,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(320),
+                                    splashColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: CircleAvatar(
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        child: const Icon(Icons.add),
+                                      ),
+                                    ),
+                                    onTap: () async {
+                                      final scaffoldMessenger =
+                                          ScaffoldMessenger.of(context);
+                                      final theme =
+                                          Theme.of(context).colorScheme;
+                                      final vacationDay = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now()
+                                            .add(const Duration(days: 1)),
+                                        firstDate: DateTime.now()
+                                            .add(const Duration(days: 1)),
+                                        lastDate: DateTime(
+                                          DateTime.now().year + 2,
+                                        ),
+                                      );
+                                      if (appProvider.vacationDays
+                                          .contains(vacationDay)) {
+                                        scaffoldMessenger.showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              'تم اضافة هذا اليوم بالفعل',
+                                            ),
+                                            backgroundColor: theme.onBackground,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      if (vacationDay != null) {
+                                        appProvider.addToVacationDays(
+                                          vacationDay,
+                                          _animatedListKey,
+                                        );
+                                        await Future.delayed(
+                                          const Duration(milliseconds: 700),
+                                        );
+                                        _scrollController.animateTo(
+                                          _scrollController
+                                                  .position.maxScrollExtent +
+                                              100,
+                                          duration:
+                                              const Duration(milliseconds: 800),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              if (appProvider.vacationDays.isEmpty)
+                                Text(
+                                  'لا يوجد اي اجازات اضافية للموظف',
+                                  style: TextStyle(
+                                    fontSize: mq.width * 0.05,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.only(
+                            bottom: 20, right: 20, left: 20),
+                        sliver: SliverAnimatedList(
+                          initialItemCount: appProvider.vacationDays.length,
+                          key: _animatedListKey,
+                          itemBuilder: (context, index, animation) {
+                            final vacationDay = appProvider.vacationDays[index];
+                            final String formattedDayInArabic =
+                                DateFormat.yMMMMEEEEd('ar').format(vacationDay);
+                            return SizeTransition(
+                              sizeFactor: animation,
+                              child: VacationDaysEditingWidget(
+                                vacationDay: vacationDay,
+                                fontSize: mq.width * 0.045,
+                                onTapFunction: () {
+                                  appProvider.deleteDayFromVacationDays(
+                                    vacationDay,
+                                    _animatedListKey,
+                                    mq.width * 0.045,
+                                    formattedDayInArabic,
+                                  );
+                                },
+                                formattedDayInArabic: formattedDayInArabic,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding:
+                            const EdgeInsets.only(top: 20, right: 20, left: 20),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              AddNewEmployeeTextField(
+                                formKey: _formKey,
+                                textEditingController:
+                                    widget.textEditingController,
+                              ),
+                              SizedBox(
+                                height: mq.height * 0.05,
+                              ),
+                              SizedBox(
+                                height: mq.height * 0.55,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButtonTheme(
+                                        data: ElevatedButtonThemeData(
+                                          style: ElevatedButton.styleFrom(
+                                            textStyle: TextStyle(
+                                              fontSize: mq.width * 0.05,
+                                              fontWeight: FontWeight.w800,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                            ),
+                                            backgroundColor:
+                                                appProvider.errorState
+                                                    ? Colors.red
+                                                    : Theme.of(context)
+                                                        .colorScheme
+                                                        .background,
+                                            foregroundColor:
+                                                appProvider.errorState
+                                                    ? Colors.white
+                                                    : Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                          ),
+                                        ),
+                                        child: WorkingTimeSelectionWidget(
+                                          isPortrait: isPortrait,
+                                          fontSize: mq.width * 0.07,
+                                          mq: mq,
+                                          workingFrom: workingFrom,
+                                          weekDaysProvider: appProvider,
+                                          workingTo: workingTo,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: mq.width * 0.02,
+                                    ),
+                                    Expanded(
+                                      child: AllowedDelayWidget(
+                                        mq: mq,
+                                        isPortrait: isPortrait,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: mq.height * 0.05,
+                              ),
+                              OffDaysSelectorWidget(
+                                isPortrait: isPortrait,
+                                weekDaysProvider: appProvider,
+                                mq: mq,
+                              ),
+                              SizedBox(height: mq.height * 0.03),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FittedBox(
+                                      alignment: Alignment.centerRight,
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        'الاجازات الاضافية',
+                                        style: TextStyle(
+                                          fontSize: mq.height * 0.08,
+                                          fontWeight: FontWeight.w700,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(320),
+                                    splashColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: CircleAvatar(
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        child: const Icon(Icons.add),
+                                      ),
+                                    ),
+                                    onTap: () async {
+                                      final scaffoldMessenger =
+                                          ScaffoldMessenger.of(context);
+                                      final theme =
+                                          Theme.of(context).colorScheme;
+                                      final vacationDay = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now()
+                                            .add(const Duration(days: 1)),
+                                        firstDate: DateTime.now()
+                                            .add(const Duration(days: 1)),
+                                        lastDate: DateTime(
+                                          DateTime.now().year + 2,
+                                        ),
+                                      );
+                                      if (appProvider.vacationDays
+                                          .contains(vacationDay)) {
+                                        scaffoldMessenger.showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              'تم اضافة هذا اليوم بالفعل',
+                                            ),
+                                            backgroundColor: theme.onBackground,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      if (vacationDay != null) {
+                                        appProvider.addToVacationDays(
+                                          vacationDay,
+                                          _animatedListKey,
+                                        );
+                                        await Future.delayed(
+                                          const Duration(milliseconds: 700),
+                                        );
+                                        _scrollController.animateTo(
+                                          _scrollController
+                                                  .position.maxScrollExtent +
+                                              100,
+                                          duration:
+                                              const Duration(milliseconds: 800),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              if (appProvider.vacationDays.isEmpty)
+                                Text(
+                                  'لا يوجد اي اجازات اضافية للموظف',
+                                  style: TextStyle(
+                                    fontSize: mq.height * 0.05,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.only(
+                            bottom: 20, right: 20, left: 20),
+                        sliver: SliverAnimatedList(
+                          initialItemCount: appProvider.vacationDays.length,
+                          key: _animatedListKey,
+                          itemBuilder: (context, index, animation) {
+                            final vacationDay = appProvider.vacationDays[index];
+                            final String formattedDayInArabic =
+                                DateFormat.yMMMMEEEEd('ar').format(vacationDay);
+                            return SizeTransition(
+                              sizeFactor: animation,
+                              child: VacationDaysEditingWidget(
+                                vacationDay: vacationDay,
+                                fontSize: mq.height * 0.06,
+                                onTapFunction: () {
+                                  appProvider.deleteDayFromVacationDays(
+                                    vacationDay,
+                                    _animatedListKey,
+                                    mq.height * 0.06,
+                                    formattedDayInArabic,
+                                  );
+                                },
+                                formattedDayInArabic: formattedDayInArabic,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),

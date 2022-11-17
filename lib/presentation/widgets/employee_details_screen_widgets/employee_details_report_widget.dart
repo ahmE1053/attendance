@@ -32,7 +32,7 @@ class EmployeeDetailsReport extends StatelessWidget {
           child: Text(
             'بيانات حضور وانصراف الموظف السابقة',
             style: TextStyle(
-              fontSize: mq.width * 0.07,
+              fontSize: fontSize,
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:attendance/core/providers/network_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,13 @@ void main() async {
   await injection();
   await getIt.get<CheckThemeFirstTimeUseCase>().run();
   // GoogleFonts.config.allowRuntimeFetching = false;
-  runApp(const ProviderLayer());
+
+  runApp(
+    DevicePreview(
+        enabled: true,
+        builder: (context) => const ProviderLayer() // Wrap your app
+        ),
+  );
 }
 
 class ProviderLayer extends StatelessWidget {
@@ -81,6 +88,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       theme: ThemeData(
         fontFamily: 'cairo',
         colorScheme: ColorScheme.fromSeed(

@@ -17,6 +17,7 @@ class EditEmployeeDetailsButton extends StatelessWidget {
     required this.workingTo,
     required this.workingFrom,
     required this.mq,
+    required this.listKey,
     required this.allowedDelayHours,
     required this.allowedDelayMinutes,
     required this.isConnectionWorking,
@@ -30,6 +31,7 @@ class EditEmployeeDetailsButton extends StatelessWidget {
   final Size mq;
   final String allowedDelayHours, allowedDelayMinutes;
   final bool isConnectionWorking;
+  final GlobalKey<SliverAnimatedListState> listKey;
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +181,12 @@ class EditEmployeeDetailsButton extends StatelessWidget {
                     );
 
                 appProvider.changeLoading(false);
-                widget.appProvider.clear();
+
+                Future.delayed(
+                  Duration(
+                    milliseconds: 200,
+                  ),
+                ).then((value) => widget.appProvider.clear());
 
                 scaffoldMessenger.showSnackBar(
                   SnackBar(

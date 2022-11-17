@@ -24,10 +24,11 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
     final weekDaysProvider = Provider.of<AppProvider>(context);
     final workingFrom = weekDaysProvider.workingFrom;
     final workingTo = weekDaysProvider.workingTo;
-    final mq = MediaQuery.of(context).size;
+    final mediaQuery = MediaQuery.of(context);
+    final mq = mediaQuery.size;
     final networkProvider = Provider.of<NetworkProvider>(context);
     final isConnectionWorking = networkProvider.isConnectionWorking;
-
+    final isPortrait = mediaQuery.orientation == Orientation.portrait;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus!.unfocus();
@@ -43,7 +44,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
-                height: mq.height * 0.07,
+                height: isPortrait ? mq.height * 0.07 : mq.width * 0.07,
                 width: mq.width,
                 child: AddNewEmployeeButton(
                   isConnectionWorking: isConnectionWorking,
@@ -54,27 +55,34 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                 ),
               ),
               NoConnectionBottomBar(
-                isConnectionWorking ? 0 : mq.height * 0.07,
+                isConnectionWorking
+                    ? 0
+                    : isPortrait
+                        ? mq.height * 0.07
+                        : mq.width * 0.07,
               ),
             ],
           ),
           body: SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.all(30),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
+            child: Padding(
+              padding: const EdgeInsets.only(top: 30, right: 30, left: 30),
+              child: isPortrait
+                  ? ListView(
+                      children: [
                         AddNewEmployeeTextField(
                           formKey: _formKey,
                           textEditingController: _textEditingController,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.02,
                         ),
                         ElevatedButtonTheme(
                           data: ElevatedButtonThemeData(
                             style: ElevatedButton.styleFrom(
                               textStyle: TextStyle(
-                                fontSize: mq.width * 0.05,
+                                fontSize: isPortrait
+                                    ? mq.width * 0.05
+                                    : mq.height * 0.05,
                                 fontWeight: FontWeight.w800,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -87,22 +95,110 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                             ),
                           ),
                           child: WorkingTimeSelectionWidget(
+                            isPortrait: isPortrait,
+                            fontSize:
+                                isPortrait ? mq.width * 0.07 : mq.height * 0.07,
                             mq: mq,
                             workingFrom: workingFrom,
                             weekDaysProvider: weekDaysProvider,
                             workingTo: workingTo,
                           ),
                         ),
+                        SizedBox(
+                          height: mq.height * 0.02,
+                        ),
                         OffDaysSelectorWidget(
+                          isPortrait: isPortrait,
                           weekDaysProvider: weekDaysProvider,
                           mq: mq,
                         ),
-                        AllowedDelayWidget(mq: mq),
+                        SizedBox(
+                          height: mq.height * 0.02,
+                        ),
+                        AllowedDelayWidget(mq: mq, isPortrait: true),
+                        SizedBox(
+                          height: mq.height * 0.01,
+                        ),
+                      ],
+                    )
+                  : ListView(
+                      children: [
+                        AddNewEmployeeTextField(
+                          formKey: _formKey,
+                          textEditingController: _textEditingController,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.05,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.55,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: ElevatedButtonTheme(
+                                  data: ElevatedButtonThemeData(
+                                    style: ElevatedButton.styleFrom(
+                                      textStyle: TextStyle(
+                                        fontSize: isPortrait
+                                            ? mq.width * 0.05
+                                            : mq.height * 0.05,
+                                        fontWeight: FontWeight.w800,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                      backgroundColor:
+                                          weekDaysProvider.errorState
+                                              ? Colors.red
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                      foregroundColor:
+                                          weekDaysProvider.errorState
+                                              ? Colors.white
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                    ),
+                                  ),
+                                  child: WorkingTimeSelectionWidget(
+                                    isPortrait: isPortrait,
+                                    fontSize: isPortrait
+                                        ? mq.width * 0.07
+                                        : mq.height * 0.07,
+                                    mq: mq,
+                                    workingFrom: workingFrom,
+                                    weekDaysProvider: weekDaysProvider,
+                                    workingTo: workingTo,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: mq.width * 0.03,
+                              ),
+                              Expanded(
+                                child: AllowedDelayWidget(
+                                  mq: mq,
+                                  isPortrait: false,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.05,
+                        ),
+                        OffDaysSelectorWidget(
+                          isPortrait: isPortrait,
+                          weekDaysProvider: weekDaysProvider,
+                          mq: mq,
+                        ),
+                        SizedBox(
+                          height: mq.height * 0.02,
+                        ),
                       ],
                     ),
-                  ),
-                ),
-              ],
             ),
           ),
         ),

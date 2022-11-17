@@ -7,9 +7,11 @@ class OffDaysSelectorWidget extends StatelessWidget {
     Key? key,
     required this.weekDaysProvider,
     required this.mq,
+    required this.isPortrait,
   }) : super(key: key);
   final AppProvider weekDaysProvider;
   final Size mq;
+  final bool isPortrait;
 
   @override
   Widget build(BuildContext context) {
@@ -39,50 +41,74 @@ class OffDaysSelectorWidget extends StatelessWidget {
             child: Text(
               'أيام الأجازة الخاصة بالموظف',
               style: TextStyle(
-                fontSize: mq.width * 0.07,
+                fontSize: isPortrait ? mq.width * 0.07 : mq.height * 0.07,
                 fontWeight: FontWeight.w900,
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
-          Row(
-            children: weekDaysProvider.weekDays.entries.take(4).map(
-              (e) {
-                final weekDayName = e.key;
-                final isSelected = e.value['isSelected'] as bool;
-                return Expanded(
-                  child: DayWidget(
-                    weekDayProvider: weekDaysProvider,
-                    isSelected: isSelected,
-                    mq: mq,
-                    weekDayName: weekDayName,
-                  ),
-                );
-              },
-            ).toList(),
-          ),
-          Row(
-            children: weekDaysProvider.weekDays.entries
-                .toList()
-                .reversed
-                .take(3)
-                .toList()
-                .reversed
-                .map(
-              (e) {
-                final weekDayName = e.key;
-                final isSelected = e.value['isSelected'] as bool;
-                return Expanded(
-                  child: DayWidget(
-                    weekDayProvider: weekDaysProvider,
-                    isSelected: isSelected,
-                    mq: mq,
-                    weekDayName: weekDayName,
-                  ),
-                );
-              },
-            ).toList(),
-          ),
+          if (isPortrait) ...[
+            Row(
+              children: weekDaysProvider.weekDays.entries.take(4).map(
+                (e) {
+                  final weekDayName = e.key;
+                  final isSelected = e.value['isSelected'] as bool;
+                  return Expanded(
+                    child: DayWidget(
+                      isFirstFour: true,
+                      isPortrait: isPortrait,
+                      weekDayProvider: weekDaysProvider,
+                      isSelected: isSelected,
+                      mq: mq,
+                      weekDayName: weekDayName,
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+            Row(
+              children: weekDaysProvider.weekDays.entries
+                  .toList()
+                  .reversed
+                  .take(3)
+                  .toList()
+                  .reversed
+                  .map(
+                (e) {
+                  final weekDayName = e.key;
+                  final isSelected = e.value['isSelected'] as bool;
+                  return Expanded(
+                    child: DayWidget(
+                      isFirstFour: false,
+                      isPortrait: isPortrait,
+                      weekDayProvider: weekDaysProvider,
+                      isSelected: isSelected,
+                      mq: mq,
+                      weekDayName: weekDayName,
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+          ] else
+            Row(
+              children: weekDaysProvider.weekDays.entries.map(
+                (e) {
+                  final weekDayName = e.key;
+                  final isSelected = e.value['isSelected'] as bool;
+                  return Expanded(
+                    child: DayWidget(
+                      isFirstFour: false,
+                      isPortrait: isPortrait,
+                      weekDayProvider: weekDaysProvider,
+                      isSelected: isSelected,
+                      mq: mq,
+                      weekDayName: weekDayName,
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
         ],
       ),
     );
@@ -96,9 +122,11 @@ class DayWidget extends StatelessWidget {
     required this.isSelected,
     required this.mq,
     required this.weekDayProvider,
+    required this.isPortrait,
+    required this.isFirstFour,
   }) : super(key: key);
   final String weekDayName;
-  final bool isSelected;
+  final bool isSelected, isPortrait, isFirstFour;
   final Size mq;
   final AppProvider weekDayProvider;
 
@@ -110,8 +138,8 @@ class DayWidget extends StatelessWidget {
         weekDayProvider.onTap(weekDayName, isSelected);
       },
       child: AnimatedContainer(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(20),
+        margin: EdgeInsets.all(isFirstFour ? 5 : 10),
+        padding: EdgeInsets.all(isFirstFour ? 12 : 20),
         duration: const Duration(
           milliseconds: 500,
         ),
@@ -129,7 +157,7 @@ class DayWidget extends StatelessWidget {
           child: Text(
             weekDayName,
             style: TextStyle(
-              fontSize: mq.width * 0.05,
+              fontSize: isPortrait ? mq.width * 0.05 : mq.height * 0.05,
               fontWeight: FontWeight.w600,
               color: isSelected
                   ? Theme.of(context).colorScheme.onPrimary
