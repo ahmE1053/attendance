@@ -1,4 +1,3 @@
-import 'package:attendance/core/providers/network_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'core/providers/app_provider.dart';
+import 'core/providers/excel_provider.dart';
+import 'core/providers/network_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/utilities/dependency_injection.dart';
 import 'presentation/screens/add_new_employee_screen.dart';
@@ -62,6 +63,8 @@ class ProviderLayer extends StatelessWidget {
             create: (BuildContext context) => ThemeProvider()),
         ChangeNotifierProvider(
             create: (BuildContext context) => NetworkProvider()),
+        ChangeNotifierProvider(
+            create: (BuildContext context) => ExcelProvider()),
       ],
       child: const MyApp(),
     );
@@ -94,7 +97,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'cairo',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.redAccent,
+          seedColor: Colors.blue,
           brightness: themeProvider.getTheme(),
         ),
       ),

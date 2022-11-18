@@ -15,30 +15,48 @@ class VacationDaysEditingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         border: Border.all(color: Theme.of(context).colorScheme.primary),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        trailing: GestureDetector(
-          onTap: onTapFunction,
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            child: const Icon(
-              Icons.delete,
+      margin: EdgeInsets.symmetric(vertical: mq.height * 0.02),
+      padding: const EdgeInsets.all(15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 10,
+            child: FittedBox(
+              alignment: Alignment.centerRight,
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'يوم $formattedDayInArabic',
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
             ),
           ),
-        ),
-        title: Text(
-          'يوم $formattedDayInArabic',
-          style: TextStyle(
-            fontSize: fontSize,
-            color: Theme.of(context).colorScheme.primary,
+          Expanded(
+            child: FittedBox(
+              child: GestureDetector(
+                onTap: onTapFunction,
+                child: CircleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  // radius: mq.width * 0.04,
+                  child: const Icon(
+                    Icons.delete,
+                    // size: mq.width * 0.04,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

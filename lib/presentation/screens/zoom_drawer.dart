@@ -1,10 +1,10 @@
-import 'package:attendance/other/network_problem_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/providers/network_provider.dart';
+import '../../other/network_problem_notifier.dart';
 import 'add_new_employee_screen.dart';
 import 'employees_screen.dart';
 

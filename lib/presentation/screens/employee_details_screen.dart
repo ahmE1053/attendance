@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/providers/app_provider.dart';
 import '../../core/providers/network_provider.dart';
 import '../../domain/entities/employee.dart';
-import '../../other/minutes_text_adjuster.dart';
 import '../widgets/employee_details_screen_widgets/exports.dart';
 import '../widgets/no_connection_bottom_bar.dart';
 
@@ -32,6 +30,7 @@ class EmployeeInfoScreen extends StatelessWidget {
         isConnectionWorking ? 0 : mq.height * 0.07,
       ),
       appBar: EmployeeDetailsScreenAppBar(
+          mq: mq,
           isConnectionWorking: isConnectionWorking,
           weekDaysProvider: weekDaysProvider,
           employee: employee),
@@ -53,7 +52,7 @@ class EmployeeInfoScreen extends StatelessWidget {
                     children: [
                       ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight: mq.height * 0.4,
+                          maxHeight: mq.height * 0.25,
                         ),
                         child: EmployeeDetailsScreenInfo(
                             employee: employee,

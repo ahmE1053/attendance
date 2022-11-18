@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../entities/employee.dart';
 
 abstract class BaseAttendanceRepository {
   Stream<List<Employee>> getEmployeesData();
+
+  Future<String> saveExcelFileAllEmployeesInCloud(File file);
 
   Future<Employee> addNewEmployee(
     String name,
@@ -31,4 +35,6 @@ abstract class BaseAttendanceRepository {
 
   Future<void> removeEmployeeAbsence(
       bool isApologyAccepted, Employee employee, int daysRemoved);
+
+  Future<String> saveExcelFileInCloud(File file, Employee employee);
 }

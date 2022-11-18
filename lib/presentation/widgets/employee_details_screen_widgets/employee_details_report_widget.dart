@@ -22,7 +22,7 @@ class EmployeeDetailsReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fontSize = isPortrait ? mq.width * 0.07 : mq.height * 0.07;
+    final fontSize = isPortrait ? mq.width * 0.05 : mq.height * 0.05;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -62,6 +62,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                     ),
                   )
                 : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
                     itemCount: employee.detailedReport.length + 1,
                     itemBuilder: (context, index) {
                       if (index == 0) {
@@ -70,6 +71,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
+                                flex: 2,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
@@ -84,7 +86,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 5),
                               Expanded(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
@@ -100,7 +102,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 5),
                               Expanded(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
@@ -164,6 +166,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                         child: Row(
                           children: [
                             Expanded(
+                              flex: 2,
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -176,7 +179,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 5),
                             Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
@@ -189,7 +192,7 @@ class EmployeeDetailsReport extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 5),
                             if (checkIfAbsentOrOnVacation) ...[
                               Expanded(
                                 child: FittedBox(
@@ -221,12 +224,15 @@ class EmployeeDetailsReport extends StatelessWidget {
                             if (!checkIfAbsentOrOnVacation)
                               Expanded(
                                 flex: 2,
-                                child: Text(
-                                  'لا يوجد',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: fontSize,
-                                    fontWeight: FontWeight.w700,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'لا يوجد',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: fontSize,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),

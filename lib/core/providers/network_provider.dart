@@ -1,5 +1,6 @@
-import 'package:attendance/other/network_checker_stream.dart';
 import 'package:flutter/material.dart';
+
+import '../../other/network_checker_stream.dart';
 
 class NetworkProvider extends ChangeNotifier {
   bool isConnectionWorking = true;

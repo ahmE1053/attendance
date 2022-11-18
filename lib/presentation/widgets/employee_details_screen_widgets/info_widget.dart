@@ -21,6 +21,7 @@ class EmployeeDetailsScreenInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
       children: [
         Hero(

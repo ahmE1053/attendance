@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../core/utilities/dependency_injection.dart';
@@ -77,5 +79,15 @@ class AttendanceRepository extends BaseAttendanceRepository {
       bool isApologyAccepted, Employee employee, int daysRemoved) async {
     await baseRemoteDatasource.removeEmployeeAbsence(
         isApologyAccepted, employee, daysRemoved);
+  }
+
+  @override
+  Future<String> saveExcelFileInCloud(File file, Employee employee) async {
+    return await baseRemoteDatasource.saveExcelFileInCloud(file, employee);
+  }
+
+  @override
+  Future<String> saveExcelFileAllEmployeesInCloud(File file) async {
+    return await baseRemoteDatasource.saveExcelFileAllEmployeesInCloud(file);
   }
 }

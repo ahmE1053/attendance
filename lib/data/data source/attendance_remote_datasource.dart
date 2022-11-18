@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../core/utilities/create_pdf_file.dart';
@@ -10,6 +11,10 @@ import '../../domain/entities/employee.dart';
 import '../models/employee_model.dart';
 
 abstract class BaseRemoteDatasource {
+  Future<String> saveExcelFileInCloud(File file, Employee employee);
+
+  Future<String> saveExcelFileAllEmployeesInCloud(File file);
+
   Stream<List<Employee>> getEmployeesData();
 
   Future<Employee> addNewEmployee(String name, String workingFrom,
@@ -145,5 +150,40 @@ class RemoteDataSource extends BaseRemoteDatasource {
             : employee.absenceDays,
       },
     );
+  }
+
+  @override
+  Future<String> saveExcelFileInCloud(File file, Employee employee) async {
+    final firebaseStorageRef = FirebaseStorage.instance.ref(
+        '${employee.name}${employee.id.substring(1, 4)}/${basename(file.path)}');
+    // firebaseStorageRef.delete();
+    await firebaseStorageRef.putFile(file);
+    final downloadUrl = await firebaseStorageRef.getDownloadURL();
+    await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(employee.id)
+        .update(
+      {
+        'excelFileDownloadUrl': downloadUrl,
+      },
+    );
+    return downloadUrl;
+  }
+
+  @override
+  Future<String> saveExcelFileAllEmployeesInCloud(File file) async {
+    final firebaseStorageRef =
+        FirebaseStorage.instance.ref('allEmployees/${basename(file.path)}');
+    await firebaseStorageRef.putFile(file);
+    final downloadUrl = await firebaseStorageRef.getDownloadURL();
+    await FirebaseFirestore.instance
+        .collection('allEmployees')
+        .doc('allEmployees')
+        .set(
+      {
+        'excelFileDownloadUrl': downloadUrl,
+      },
+    );
+    return downloadUrl;
   }
 }

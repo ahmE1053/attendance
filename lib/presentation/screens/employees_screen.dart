@@ -1,15 +1,14 @@
-import 'package:attendance/core/providers/network_provider.dart';
-import 'package:attendance/presentation/widgets/employees_screen_widgets/table_entry_landscape.dart';
-import 'package:attendance/presentation/widgets/no_connection_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/providers/app_provider.dart';
+import '../../core/providers/network_provider.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../core/utilities/dependency_injection.dart';
 import '../../domain/entities/employee.dart';
 import '../../domain/use cases/get_employees_data_use_case.dart';
 import '../widgets/employees_screen_widgets/exports.dart';
+import '../widgets/no_connection_bottom_bar.dart';
 
 class GeneralEmployeesScreen extends StatefulWidget {
   static const id = 'GeneralEmployeesScreen';
@@ -87,6 +86,7 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                   builder: (context, orientation) {
                     if (orientation == Orientation.portrait) {
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           if (index == 0) {
                             return EmployeesScreenTableHeaderWidget(mq: mq);
@@ -100,6 +100,7 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                       );
                     } else {
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           if (index == 0) {
                             return SizedBox(

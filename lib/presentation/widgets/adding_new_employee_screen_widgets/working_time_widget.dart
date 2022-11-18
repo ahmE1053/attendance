@@ -96,7 +96,7 @@ class WorkingTimeSelectionWidget extends StatelessWidget {
                           text: 'موعد حضور الموظف',
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: WorkingTimeWidget(
                           fontSize: fontSize,
@@ -214,7 +214,7 @@ class WorkingTimeWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       color: Theme.of(context).colorScheme.surfaceVariant,
                     ),
-                    padding: const EdgeInsets.all(15),
+                    padding: EdgeInsets.all(mq.width * .02),
                     child: const FittedBox(
                       child: Icon(
                         Icons.edit,

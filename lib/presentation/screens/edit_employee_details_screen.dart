@@ -139,7 +139,7 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
               builder: (context) {
                 if (isPortrait) {
                   return CustomScrollView(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     controller: _scrollController,
                     slivers: [
                       SliverPadding(
@@ -153,12 +153,14 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                                 textEditingController:
                                     widget.textEditingController,
                               ),
-                              SizedBox(height: mq.width * 0.04),
+                              SizedBox(height: mq.height * 0.02),
                               ElevatedButtonTheme(
                                 data: ElevatedButtonThemeData(
                                   style: ElevatedButton.styleFrom(
                                     textStyle: TextStyle(
-                                      fontSize: mq.width * 0.05,
+                                      fontSize: isPortrait
+                                          ? mq.width * 0.05
+                                          : mq.height * 0.05,
                                       fontWeight: FontWeight.w800,
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -175,28 +177,34 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                                 ),
                                 child: WorkingTimeSelectionWidget(
                                   isPortrait: isPortrait,
-                                  fontSize: mq.width * 0.07,
+                                  fontSize: isPortrait
+                                      ? mq.width * 0.07
+                                      : mq.height * 0.07,
                                   mq: mq,
                                   workingFrom: workingFrom,
                                   weekDaysProvider: appProvider,
                                   workingTo: workingTo,
                                 ),
                               ),
-                              SizedBox(height: mq.width * 0.04),
-                              OffDaysSelectorWidget(
-                                isPortrait: isPortrait,
-                                weekDaysProvider: appProvider,
-                                mq: mq,
-                              ),
-                              SizedBox(height: mq.width * 0.04),
+                              SizedBox(height: mq.height * 0.02),
                               SizedBox(
-                                height: mq.height * 0.25,
+                                height: mq.height * 0.35,
+                                child: OffDaysSelectorWidget(
+                                  isPortrait: isPortrait,
+                                  weekDaysProvider: appProvider,
+                                  mq: mq,
+                                ),
+                              ),
+                              SizedBox(height: mq.height * 0.02),
+                              ConstrainedBox(
+                                constraints:
+                                    BoxConstraints(maxHeight: mq.height * 0.5),
                                 child: AllowedDelayWidget(
                                   mq: mq,
                                   isPortrait: isPortrait,
                                 ),
                               ),
-                              SizedBox(height: mq.width * 0.04),
+                              SizedBox(height: mq.height * 0.01),
                               Row(
                                 children: [
                                   Expanded(
@@ -311,12 +319,12 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                               sizeFactor: animation,
                               child: VacationDaysEditingWidget(
                                 vacationDay: vacationDay,
-                                fontSize: mq.width * 0.045,
+                                fontSize: mq.width * 0.05,
                                 onTapFunction: () {
                                   appProvider.deleteDayFromVacationDays(
                                     vacationDay,
                                     _animatedListKey,
-                                    mq.width * 0.045,
+                                    mq.width * 0.05,
                                     formattedDayInArabic,
                                   );
                                 },
@@ -331,6 +339,7 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                 } else {
                   return CustomScrollView(
                     controller: _scrollController,
+                    physics: const BouncingScrollPhysics(),
                     slivers: [
                       SliverPadding(
                         padding:
@@ -347,15 +356,21 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                                 height: mq.height * 0.05,
                               ),
                               SizedBox(
-                                height: mq.height * 0.55,
+                                height: mq.height > 700
+                                    ? mq.height * 0.4
+                                    : mq.height * 0.57,
                                 child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Expanded(
                                       child: ElevatedButtonTheme(
                                         data: ElevatedButtonThemeData(
                                           style: ElevatedButton.styleFrom(
                                             textStyle: TextStyle(
-                                              fontSize: mq.width * 0.05,
+                                              fontSize: isPortrait
+                                                  ? mq.width * 0.05
+                                                  : mq.height * 0.05,
                                               fontWeight: FontWeight.w800,
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -377,7 +392,9 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                                         ),
                                         child: WorkingTimeSelectionWidget(
                                           isPortrait: isPortrait,
-                                          fontSize: mq.width * 0.07,
+                                          fontSize: isPortrait
+                                              ? mq.width * 0.07
+                                              : mq.height * 0.07,
                                           mq: mq,
                                           workingFrom: workingFrom,
                                           weekDaysProvider: appProvider,

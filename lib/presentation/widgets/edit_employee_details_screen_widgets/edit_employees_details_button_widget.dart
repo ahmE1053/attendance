@@ -183,7 +183,7 @@ class EditEmployeeDetailsButton extends StatelessWidget {
                 appProvider.changeLoading(false);
 
                 Future.delayed(
-                  Duration(
+                  const Duration(
                     milliseconds: 200,
                   ),
                 ).then((value) => widget.appProvider.clear());

@@ -1,6 +1,6 @@
-import 'package:attendance/core/other/employee_state_color_getter.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/other/employee_state_color_getter.dart';
 import '../../../domain/entities/employee.dart';
 import '../../screens/employee_details_screen.dart';
 
@@ -30,8 +30,8 @@ class TableEntryLandscape extends StatelessWidget {
         );
       },
       child: Container(
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: colorScheme.primary,
           borderRadius: BorderRadius.circular(20),

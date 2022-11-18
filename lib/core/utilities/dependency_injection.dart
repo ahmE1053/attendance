@@ -12,6 +12,7 @@ import '../../domain/use cases/edit_employee_details_use_case.dart';
 import '../../domain/use cases/get_employees_data_use_case.dart';
 import '../../domain/use cases/get_qr_code_in_pdf_cloud_use_case.dart';
 import '../../domain/use cases/remove_employee_absence_use_case.dart';
+import '../../domain/use cases/upload_excel_file_to_storage.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,6 +25,10 @@ Future<void> injection() async {
       () => AttendanceRepository());
   getIt.registerLazySingleton<AddNewEmployeeUseCase>(
       () => AddNewEmployeeUseCase());
+  getIt.registerLazySingleton<UploadExcelFileToStorage>(
+      () => UploadExcelFileToStorage());
+  getIt.registerLazySingleton<UploadExcelFileAllEmployeesToStorage>(
+      () => UploadExcelFileAllEmployeesToStorage());
   getIt.registerLazySingleton<GetEmployeesDataUseCase>(
       () => GetEmployeesDataUseCase());
   getIt.registerLazySingleton<RemoveEmployeeAbsenceUseCase>(

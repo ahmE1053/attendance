@@ -16,6 +16,7 @@ class AddNewEmployeeTextField extends StatefulWidget {
 class _AddNewEmployeeTextFieldState extends State<AddNewEmployeeTextField> {
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context).size;
     return Form(
       key: widget.formKey,
       child: TextFormField(
@@ -61,6 +62,7 @@ class _AddNewEmployeeTextFieldState extends State<AddNewEmployeeTextField> {
         ),
         style: TextStyle(
           color: Theme.of(context).colorScheme.onBackground,
+          fontSize: mq.width * 0.04,
         ),
         validator: (value) {
           if (value!.isEmpty) {

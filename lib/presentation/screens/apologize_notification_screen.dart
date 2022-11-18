@@ -61,6 +61,7 @@ class _ApologizeNotificationScreenState
                   ),
                 )
               : AnimatedList(
+                  physics: const BouncingScrollPhysics(),
                   key: listKey,
                   initialItemCount: employeesList.length,
                   itemBuilder: (context, index, _) {

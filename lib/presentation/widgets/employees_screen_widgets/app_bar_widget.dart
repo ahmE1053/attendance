@@ -1,11 +1,13 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/providers/theme_provider.dart';
 import '../../../domain/entities/employee.dart';
 import '../../../other/network_problem_notifier.dart';
 import '../../screens/apologize_notification_screen.dart';
+import '../../screens/excel_export_screen.dart';
 import '../../screens/zoom_drawer.dart';
 
 class EmployeesScreenAppBar extends StatelessWidget
@@ -91,6 +93,28 @@ class EmployeesScreenAppBar extends StatelessWidget
           const SpinKitDoubleBounce(
             color: Colors.white,
           ),
+        Tooltip(
+          message: 'تحميل بيانات الموظفين على هيئة ملف Excel',
+          child: IconButton(
+            onPressed: !isConnectionWorking
+                ? () => networkProblemNotifier(context)
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ExcelExportScreen(
+                          employeesList: employeesList,
+                          isAllEmployee: true,
+                        ),
+                      ),
+                    );
+                  },
+            icon: Icon(
+              FontAwesomeIcons.fileExport,
+              color: isConnectionWorking ? Colors.white : Colors.grey,
+            ),
+          ),
+        ),
       ],
       title: const Text('الموظفين'),
     );

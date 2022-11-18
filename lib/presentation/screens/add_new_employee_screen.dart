@@ -68,6 +68,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
               padding: const EdgeInsets.only(top: 30, right: 30, left: 30),
               child: isPortrait
                   ? ListView(
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         AddNewEmployeeTextField(
                           formKey: _formKey,
@@ -104,24 +105,35 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                             workingTo: workingTo,
                           ),
                         ),
+                        SizedBox(height: mq.height * 0.02),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: mq.height * 0.35,
+                          ),
+                          child: OffDaysSelectorWidget(
+                            isPortrait: isPortrait,
+                            weekDaysProvider: weekDaysProvider,
+                            mq: mq,
+                          ),
+                        ),
                         SizedBox(
                           height: mq.height * 0.02,
                         ),
-                        OffDaysSelectorWidget(
-                          isPortrait: isPortrait,
-                          weekDaysProvider: weekDaysProvider,
-                          mq: mq,
+                        ConstrainedBox(
+                          constraints:
+                              BoxConstraints(maxHeight: mq.height * 0.5),
+                          child: AllowedDelayWidget(
+                            mq: mq,
+                            isPortrait: true,
+                          ),
                         ),
-                        SizedBox(
-                          height: mq.height * 0.02,
-                        ),
-                        AllowedDelayWidget(mq: mq, isPortrait: true),
                         SizedBox(
                           height: mq.height * 0.01,
                         ),
                       ],
                     )
                   : ListView(
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         AddNewEmployeeTextField(
                           formKey: _formKey,
@@ -131,7 +143,9 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                           height: mq.height * 0.05,
                         ),
                         SizedBox(
-                          height: mq.height * 0.55,
+                          height: mq.height > 700
+                              ? mq.height * 0.4
+                              : mq.height * 0.57,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -175,7 +189,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                                 ),
                               ),
                               SizedBox(
-                                width: mq.width * 0.03,
+                                width: mq.width * 0.02,
                               ),
                               Expanded(
                                 child: AllowedDelayWidget(
