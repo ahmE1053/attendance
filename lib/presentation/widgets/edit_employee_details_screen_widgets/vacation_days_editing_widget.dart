@@ -21,7 +21,7 @@ class VacationDaysEditingWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
         border: Border.all(color: Theme.of(context).colorScheme.primary),
       ),
-      margin: EdgeInsets.symmetric(vertical: mq.height * 0.02),
+      margin: EdgeInsets.symmetric(vertical: mq.height * 0.01),
       padding: const EdgeInsets.all(15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,16 +41,21 @@ class VacationDaysEditingWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: FittedBox(
-              child: GestureDetector(
-                onTap: onTapFunction,
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  // radius: mq.width * 0.04,
-                  child: const Icon(
-                    Icons.delete,
-                    // size: mq.width * 0.04,
+            child: Align(
+              child: AspectRatio(
+                aspectRatio: 3 / 2,
+                child: FittedBox(
+                  child: GestureDetector(
+                    onTap: onTapFunction,
+                    child: CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      // radius: mq.width * 0.04,
+                      child: const Icon(
+                        Icons.delete,
+                        // size: mq.width * 0.04,
+                      ),
+                    ),
                   ),
                 ),
               ),

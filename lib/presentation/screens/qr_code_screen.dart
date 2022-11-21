@@ -93,6 +93,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: mq.height * 0.03),
                     BarcodeWidget(
                       padding: EdgeInsets.zero,
                       height: mq.height * 0.5,
@@ -102,6 +103,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       width: mq.width * 0.9,
                       drawText: true,
                     ),
+                    SizedBox(height: mq.height * 0.03),
                     buildRoundedLoadingButton(isConnectionWorking, context, mq),
                   ],
                 ),
@@ -156,6 +158,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   RoundedLoadingButton buildRoundedLoadingButton(
       bool isConnectionWorking, BuildContext context, Size mq) {
     return RoundedLoadingButton(
+      height: mq.height * 0.07,
       onPressed: !isConnectionWorking
           ? null
           : () async {
@@ -211,10 +214,16 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       successColor: Colors.greenAccent,
       controller: _buttonController,
       color: Theme.of(context).colorScheme.primary,
-      child: Text(
-        'حفظ الملف في صيغة pdf',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: mq.width * 0.04),
+        child: FittedBox(
+          child: Text(
+            'حفظ الملف في صيغة pdf',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: mq.width * 0.07,
+            ),
+          ),
         ),
       ),
     );

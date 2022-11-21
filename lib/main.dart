@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -36,16 +37,17 @@ void main() async {
       if (context != null) {
         precacheImage(const AssetImage('assets/no_connection.png'), context);
         precacheImage(const AssetImage('assets/not_found.gif'), context);
+        precacheImage(const AssetImage('assets/excel.gif'), context);
       }
     },
   );
+
   await injection();
   await getIt.get<CheckThemeFirstTimeUseCase>().run();
-  // GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(
     DevicePreview(
-        enabled: true,
+        enabled: kDebugMode,
         builder: (context) => const ProviderLayer() // Wrap your app
         ),
   );
@@ -97,7 +99,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'cairo',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: Colors.indigo,
           brightness: themeProvider.getTheme(),
         ),
       ),

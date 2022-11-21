@@ -85,7 +85,9 @@ class EmployeesScreenTableEntryWidget extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(
+                    employee.employeeState == 'خارج ساعات العمل' ? 0 : 10,
+                  ),
                   decoration: BoxDecoration(
                     color: employeeStateColorGetter(
                       employee.employeeState,

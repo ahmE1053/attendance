@@ -355,10 +355,8 @@ class _EditEmployeeDetailsScreenState extends State<EditEmployeeDetailsScreen> {
                               SizedBox(
                                 height: mq.height * 0.05,
                               ),
-                              SizedBox(
-                                height: mq.height > 700
-                                    ? mq.height * 0.4
-                                    : mq.height * 0.57,
+                              AspectRatio(
+                                aspectRatio: 3,
                                 child: Row(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
