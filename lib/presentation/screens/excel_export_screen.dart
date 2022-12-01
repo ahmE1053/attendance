@@ -74,7 +74,7 @@ class ExcelExportScreen extends StatelessWidget {
         isConnectionWorking ? 0 : mq.height * 0.07,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: mq.width * 0.2),
+        padding: EdgeInsets.symmetric(horizontal: mq.width * 0.15),
         child: OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.portrait) {
@@ -83,7 +83,7 @@ class ExcelExportScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Image.asset(
-                    'assets/excel.gif',
+                    'assets/excel.png',
                     fit: BoxFit.fill,
                   ),
                   SizedBox(
@@ -127,14 +127,19 @@ class ExcelExportScreen extends StatelessWidget {
                           ? CircularProgressIndicator(
                               color: Theme.of(context).colorScheme.onPrimary,
                             )
-                          : Text(
-                              isAllEmployee
-                                  ? employeesList!.isEmpty
-                                      ? 'لا يوجد موظفين'
-                                      : 'تحميل'
-                                  : employee!.detailedReport.isNotEmpty
-                                      ? 'تحميل'
-                                      : 'لا يوجد بيانات سابقة للموظف',
+                          : FittedBox(
+                              child: Text(
+                                isAllEmployee
+                                    ? employeesList!.isEmpty
+                                        ? 'لا يوجد موظفين'
+                                        : 'تحميل'
+                                    : employee!.detailedReport.isNotEmpty
+                                        ? 'تحميل'
+                                        : 'لا يوجد بيانات سابقة للموظف',
+                                style: TextStyle(
+                                  fontSize: mq.width * 0.05,
+                                ),
+                              ),
                             ),
                     ),
                   ),
@@ -145,10 +150,11 @@ class ExcelExportScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Image.asset(
-                      'assets/excel.gif',
+                      'assets/excel.png',
                       fit: BoxFit.fill,
                     ),
                   ),
+                  SizedBox(width: mq.width * 0.05),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -193,14 +199,19 @@ class ExcelExportScreen extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary,
                                   )
-                                : Text(
-                                    isAllEmployee
-                                        ? employeesList!.isEmpty
-                                            ? 'لا يوجد موظفين'
-                                            : 'تحميل'
-                                        : employee!.detailedReport.isNotEmpty
-                                            ? 'تحميل'
-                                            : 'لا يوجد بيانات سابقة للموظف',
+                                : FittedBox(
+                                    child: Text(
+                                      isAllEmployee
+                                          ? employeesList!.isEmpty
+                                              ? 'لا يوجد موظفين'
+                                              : 'تحميل'
+                                          : employee!.detailedReport.isNotEmpty
+                                              ? 'تحميل'
+                                              : 'لا يوجد بيانات سابقة للموظف',
+                                      style: TextStyle(
+                                        fontSize: mq.height * 0.04,
+                                      ),
+                                    ),
                                   ),
                           ),
                         ),

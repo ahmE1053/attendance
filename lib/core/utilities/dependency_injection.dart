@@ -8,6 +8,7 @@ import '../../domain/repository/base_attendance_repository.dart';
 import '../../domain/use cases/add_new_employee_use_case.dart';
 import '../../domain/use cases/change_theme_use_case.dart';
 import '../../domain/use cases/check_theme_first_time_use_case.dart';
+import '../../domain/use cases/delete_employee.dart';
 import '../../domain/use cases/edit_employee_details_use_case.dart';
 import '../../domain/use cases/get_employees_data_use_case.dart';
 import '../../domain/use cases/get_qr_code_in_pdf_cloud_use_case.dart';
@@ -41,4 +42,6 @@ Future<void> injection() async {
       () => ChangeThemeModeUseCase());
   getIt.registerLazySingleton<CheckThemeFirstTimeUseCase>(
       () => CheckThemeFirstTimeUseCase());
+  getIt.registerLazySingleton<DeleteEmployeeUseCase>(
+      () => DeleteEmployeeUseCase());
 }

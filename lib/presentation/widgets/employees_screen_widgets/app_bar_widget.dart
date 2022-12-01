@@ -121,6 +121,5 @@ class EmployeesScreenAppBar extends StatelessWidget
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size(0, AppBar().preferredSize.height);
 }

@@ -90,4 +90,9 @@ class AttendanceRepository extends BaseAttendanceRepository {
   Future<String> saveExcelFileAllEmployeesInCloud(File file) async {
     return await baseRemoteDatasource.saveExcelFileAllEmployeesInCloud(file);
   }
+
+  @override
+  Future<void> deleteEmployee(Employee employee) async {
+    await baseRemoteDatasource.deleteAnEmployee(employee);
+  }
 }

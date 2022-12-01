@@ -61,210 +61,215 @@ class EmployeeDetailsReport extends StatelessWidget {
                       ),
                     ),
                   )
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: employee.detailedReport.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Align(
-                                  child: SizedBox(
-                                    width: isPortrait
-                                        ? mq.height * 0.06
-                                        : mq.width * 0.06,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'اليوم',
-                                        style: TextStyle(
-                                          fontSize: fontSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Align(
-                                  child: SizedBox(
-                                    width: isPortrait
-                                        ? mq.height * 0.06
-                                        : mq.width * 0.06,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'الحالة',
-                                        style: TextStyle(
-                                          fontSize: fontSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Align(
-                                  child: SizedBox(
-                                    width: isPortrait
-                                        ? mq.height * 0.06
-                                        : mq.width * 0.06,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'الحضور',
-                                        style: TextStyle(
-                                          fontSize: fontSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Align(
-                                  child: SizedBox(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'الانصراف',
-                                        style: TextStyle(
-                                          fontSize: fontSize,
-                                          fontWeight: FontWeight.w700,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      final detailedReportForDay =
-                          employee.detailedReport[index - 1];
-                      final formatDay = DateFormat.E('ar-EG');
-                      final formatRest = DateFormat.yMMMMd('ar-EG');
-                      final currentDayInReport = formatDay.format(
-                        (detailedReportForDay['currentDay'] as Timestamp)
-                            .toDate(),
-                      );
-                      final currentDateInReport = formatRest.format(
-                        (detailedReportForDay['currentDay'] as Timestamp)
-                            .toDate(),
-                      );
-                      final finalCurrentDay =
-                          '$currentDayInReport\n$currentDateInReport';
-                      final bool checkIfAbsentOrOnVacation =
-                          detailedReportForDay['todayState'] == 'حاضر';
-                      return Container(
+                : Column(
+                    children: [
+                      Container(
                         padding: const EdgeInsets.all(20),
-                        margin: const EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: isDarkMode
-                              ? colorScheme.background
-                              : colorScheme.onPrimary,
-                        ),
                         child: Row(
                           children: [
                             Expanded(
                               flex: 2,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  finalCurrentDay,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: fontSize,
-                                    fontWeight: FontWeight.w900,
+                              child: Align(
+                                child: SizedBox(
+                                  width: isPortrait
+                                      ? mq.height * 0.06
+                                      : mq.width * 0.06,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'اليوم',
+                                      style: TextStyle(
+                                        fontSize: fontSize,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 5),
                             Expanded(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  detailedReportForDay['todayState'],
-                                  style: TextStyle(
-                                    fontSize: fontSize,
-                                    fontWeight: FontWeight.w700,
+                              child: Align(
+                                child: SizedBox(
+                                  width: isPortrait
+                                      ? mq.height * 0.06
+                                      : mq.width * 0.06,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'الحالة',
+                                      style: TextStyle(
+                                        fontSize: fontSize,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 5),
-                            if (checkIfAbsentOrOnVacation) ...[
-                              Expanded(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    detailedReportForDay[
-                                        'currentDayWorkingFrom'],
-                                    style: TextStyle(
-                                      fontSize: fontSize,
-                                      fontWeight: FontWeight.w700,
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Align(
+                                child: SizedBox(
+                                  width: isPortrait
+                                      ? mq.height * 0.06
+                                      : mq.width * 0.06,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'الحضور',
+                                      style: TextStyle(
+                                        fontSize: fontSize,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    detailedReportForDay['currentDayWorkingTo'],
-                                    style: TextStyle(
-                                      fontSize: fontSize,
-                                      fontWeight: FontWeight.w700,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Align(
+                                child: SizedBox(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'الانصراف',
+                                      style: TextStyle(
+                                        fontSize: fontSize,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                            if (!checkIfAbsentOrOnVacation)
-                              Expanded(
-                                flex: 2,
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    'لا يوجد',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: fontSize,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            ),
                           ],
                         ),
-                      );
-                    },
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: employee.detailedReport.length,
+                          itemBuilder: (context, index) {
+                            final detailedReportForDay =
+                                employee.detailedReport[index];
+                            final formatDay = DateFormat.E('ar-EG');
+                            final formatRest = DateFormat.yMMMMd('ar-EG');
+                            final currentDayInReport = formatDay.format(
+                              (detailedReportForDay['currentDay'] as Timestamp)
+                                  .toDate(),
+                            );
+                            final currentDateInReport = formatRest.format(
+                              (detailedReportForDay['currentDay'] as Timestamp)
+                                  .toDate(),
+                            );
+                            final finalCurrentDay =
+                                '$currentDayInReport\n$currentDateInReport';
+                            final bool checkIfAbsentOrOnVacation =
+                                detailedReportForDay['todayState'] == 'حاضر';
+                            return Container(
+                              padding: const EdgeInsets.all(20),
+                              margin: const EdgeInsets.only(bottom: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: isDarkMode
+                                    ? colorScheme.background
+                                    : colorScheme.onPrimary,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        finalCurrentDay,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Expanded(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        detailedReportForDay['todayState'],
+                                        style: TextStyle(
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  if (checkIfAbsentOrOnVacation) ...[
+                                    Expanded(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          detailedReportForDay[
+                                              'currentDayWorkingFrom'],
+                                          style: TextStyle(
+                                            fontSize: fontSize,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          detailedReportForDay[
+                                              'currentDayWorkingTo'],
+                                          style: TextStyle(
+                                            fontSize: fontSize,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  if (!checkIfAbsentOrOnVacation)
+                                    Expanded(
+                                      flex: 2,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          'لا يوجد',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: fontSize,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
           ),
         ),

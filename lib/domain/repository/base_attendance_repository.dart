@@ -37,4 +37,6 @@ abstract class BaseAttendanceRepository {
       bool isApologyAccepted, Employee employee, int daysRemoved);
 
   Future<String> saveExcelFileInCloud(File file, Employee employee);
+
+  Future<void> deleteEmployee(Employee employee);
 }

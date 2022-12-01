@@ -37,7 +37,7 @@ void main() async {
       if (context != null) {
         precacheImage(const AssetImage('assets/no_connection.png'), context);
         precacheImage(const AssetImage('assets/not_found.gif'), context);
-        precacheImage(const AssetImage('assets/excel.gif'), context);
+        precacheImage(const AssetImage('assets/excel.png'), context);
       }
     },
   );
@@ -83,7 +83,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<NetworkProvider>(context, listen: false)
         .changeIsConnectionWorking();

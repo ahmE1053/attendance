@@ -33,15 +33,17 @@ abstract class BaseRemoteDatasource {
 
   Future<void> removeEmployeeAbsence(
       bool isApologyAccepted, Employee employee, int daysRemoved);
+
+  Future<void> deleteAnEmployee(Employee employee);
 }
 
 class RemoteDataSource extends BaseRemoteDatasource {
+  final fireStoreRef = FirebaseFirestore.instance.collection('employees');
+  final firebaseStorageInstance = FirebaseStorage.instance;
+
   @override
   Future<Employee> addNewEmployee(String name, String workingFrom,
       String workingTo, List<int> offDays, String allowedDelay) async {
-    final fireStoreInstance = FirebaseFirestore.instance;
-    final fireStoreRef = fireStoreInstance.collection('employees');
-
     final json = {
       'name': name,
       'currentDayWorkingFrom': null,
@@ -67,9 +69,7 @@ class RemoteDataSource extends BaseRemoteDatasource {
 
   @override
   Stream<List<Employee>> getEmployeesData() {
-    final fireStoreRef =
-        FirebaseFirestore.instance.collection('employees').orderBy('name');
-    return fireStoreRef.snapshots().map(
+    return fireStoreRef.orderBy('name').snapshots().map(
       (event) {
         if (event.docs.isEmpty) {
           return [];
@@ -90,14 +90,13 @@ class RemoteDataSource extends BaseRemoteDatasource {
     final Directory directory = await getApplicationDocumentsDirectory();
     final File pdfFile = await File('${directory.path}/$name.pdf').create();
     await pdfFile.writeAsBytes(pdf);
-    final cloudStorageInstance = FirebaseStorage.instance;
     final rootRef =
-        cloudStorageInstance.ref('/${name}_${id.substring(0, 3)}.pdf');
+        firebaseStorageInstance.ref('/${name}_${id.substring(0, 3)}.pdf');
     final File qrPdf = File('${directory.path}/$name.pdf');
     await rootRef.putFile(qrPdf);
     final downloadUrl = await rootRef.getDownloadURL();
-    final fireStoreInstance = FirebaseFirestore.instance;
-    await fireStoreInstance.collection('employees').doc(id).update(
+
+    await fireStoreRef.doc(id).update(
       {
         'employeeQrCodePdfLink': downloadUrl,
       },
@@ -119,10 +118,7 @@ class RemoteDataSource extends BaseRemoteDatasource {
     final List<String> vacationDaysString =
         vacationDays.map((e) => e.toIso8601String()).toList();
 
-    await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(employee.id)
-        .update(
+    await fireStoreRef.doc(employee.id).update(
       {
         'name': newName,
         'workingFrom': workingFrom,
@@ -137,10 +133,7 @@ class RemoteDataSource extends BaseRemoteDatasource {
   @override
   Future<void> removeEmployeeAbsence(
       bool isApologyAccepted, Employee employee, int daysRemoved) async {
-    await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(employee.id)
-        .update(
+    await fireStoreRef.doc(employee.id).update(
       {
         'isApologizing': false,
         'apologyMessage': '',
@@ -154,15 +147,11 @@ class RemoteDataSource extends BaseRemoteDatasource {
 
   @override
   Future<String> saveExcelFileInCloud(File file, Employee employee) async {
-    final firebaseStorageRef = FirebaseStorage.instance.ref(
+    final firebaseStorageRef = firebaseStorageInstance.ref(
         '${employee.name}${employee.id.substring(1, 4)}/${basename(file.path)}');
-    // firebaseStorageRef.delete();
     await firebaseStorageRef.putFile(file);
     final downloadUrl = await firebaseStorageRef.getDownloadURL();
-    await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(employee.id)
-        .update(
+    await fireStoreRef.doc(employee.id).update(
       {
         'excelFileDownloadUrl': downloadUrl,
       },
@@ -173,17 +162,19 @@ class RemoteDataSource extends BaseRemoteDatasource {
   @override
   Future<String> saveExcelFileAllEmployeesInCloud(File file) async {
     final firebaseStorageRef =
-        FirebaseStorage.instance.ref('allEmployees/${basename(file.path)}');
+        firebaseStorageInstance.ref('allEmployees/${basename(file.path)}');
     await firebaseStorageRef.putFile(file);
     final downloadUrl = await firebaseStorageRef.getDownloadURL();
-    await FirebaseFirestore.instance
-        .collection('allEmployees')
-        .doc('allEmployees')
-        .set(
+    await fireStoreRef.doc('allEmployees').set(
       {
         'excelFileDownloadUrl': downloadUrl,
       },
     );
     return downloadUrl;
+  }
+
+  @override
+  Future<void> deleteAnEmployee(Employee employee) async {
+    await fireStoreRef.doc(employee.id).delete();
   }
 }

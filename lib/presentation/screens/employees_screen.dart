@@ -114,7 +114,9 @@ class _GeneralEmployeesScreenState extends State<GeneralEmployeesScreen> {
                             return SizedBox(
                               height: mq.height * 0.3,
                               child: EmployeesScreenTableEntryWidget(
-                                  employee: employee, mq: mq),
+                                employee: employee,
+                                mq: mq,
+                              ),
                             );
                           }
                         },
