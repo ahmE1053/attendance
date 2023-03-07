@@ -41,7 +41,7 @@ class _AllowedDelayWidgetState extends State<AllowedDelayWidget> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: Theme.of(context).colorScheme.primary,
-          strokeAlign: StrokeAlign.outside,
+          strokeAlign: BorderSide.strokeAlignOutside,
           width: 3,
         ),
       ),

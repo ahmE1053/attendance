@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -71,14 +71,14 @@ class EmployeesScreenAppBar extends StatelessWidget
                         ),
                       );
                     },
-              icon: Badge(
+              icon: badge.Badge(
                 badgeContent: Text(
                   employeesList
                       .where((element) => element.isApologizing == true)
                       .length
                       .toString(),
                 ),
-                position: BadgePosition.topStart(),
+                position: badge.BadgePosition.topStart(),
                 showBadge: employeesList
                     .where((element) => element.isApologizing == true)
                     .isNotEmpty,
